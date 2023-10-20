@@ -11,7 +11,7 @@ def get_image_name(string) -> str:
   return ':'.join(string.split(':')[:-1])
 
 
-def get_so_image_basename(string) -> str:
+def get_tc_image_basename(string) -> str:
   return get_image_name(string).split('/tc-')[-1]
 
 
@@ -43,12 +43,12 @@ def main(quiet):
   # Map list of image objects to flattened list of tags (format: "name:version")
   tag_list = list(chain.from_iterable(list(map(lambda x: x.attrs.get('RepoTags'), image_list))))
 
-  # Filter to only SO images (base name begins with "tc-")
+  # Filter to only TC images (base name begins with "tc-")
   tag_list = list(filter(lambda x: re.match(r'^.*\/tc-[^\/]*$', get_image_name(x)), tag_list))
 
   # Group tags into lists by base name (sort by same projection first)
-  tag_list.sort(key=lambda x: get_so_image_basename(x))
-  grouped_tag_lists = [ list(it) for _, it in groupby(tag_list, lambda x: get_so_image_basename(x)) ]
+  tag_list.sort(key=lambda x: get_tc_image_basename(x))
+  grouped_tag_lists = [ list(it) for _, it in groupby(tag_list, lambda x: get_tc_image_basename(x)) ]
 
   no_prunable = True
   for t_list in grouped_tag_lists:
@@ -70,11 +70,11 @@ def main(quiet):
             except docker.errors.ClientError as e:
               print(f'Could not remove image {tag}, continuing...')
     except (docker.errors.APIError, InvalidVersion) as e:
-      print(f'tc-{get_so_image_basename(t_list[0])}: {e}', file=sys.stderr)
+      print(f'tc-{get_tc_image_basename(t_list[0])}: {e}', file=sys.stderr)
       exit(1)
     except Exception as e:
       print('Unhandled exception occurred:')
-      print(f'tc-{get_so_image_basename(t_list[0])}: {e}', file=sys.stderr)
+      print(f'tc-{get_tc_image_basename(t_list[0])}: {e}', file=sys.stderr)
       exit(1)
 
   if no_prunable and not quiet:

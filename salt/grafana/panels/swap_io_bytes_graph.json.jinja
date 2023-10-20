@@ -84,7 +84,7 @@
       "hide": false,
       "orderByTime": "ASC",
       "policy": "default",
-      "query": "SELECT non_negative_derivative(mean(\"mean_in\")) as \"trend_in\", non_negative_derivative(mean(\"mean_out\")) as \"trend_out\" FROM \"so_long_term\".\"swap\" WHERE host =~ /$servername$/ AND $timeFilter GROUP BY time($__interval), host fill(linear) ORDER BY asc",
+      "query": "SELECT non_negative_derivative(mean(\"mean_in\")) as \"trend_in\", non_negative_derivative(mean(\"mean_out\")) as \"trend_out\" FROM \"tc_long_term\".\"swap\" WHERE host =~ /$servername$/ AND $timeFilter GROUP BY time($__interval), host fill(linear) ORDER BY asc",
       "queryType": "randomWalk",
       "rawQuery": true,
       "refId": "B",

@@ -96,7 +96,7 @@ merged_module_conf:
     - defaults:
         MODULES: {{ MODULESENABLED }}
 
-so_module_conf_remove:
+tc_module_conf_remove:
   file.absent:
     - name: /opt/tc/conf/filebeat/modules/threatcode.yml
 

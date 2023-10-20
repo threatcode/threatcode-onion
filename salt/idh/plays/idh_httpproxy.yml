@@ -1,7 +1,7 @@
-title: SO IDH - HTTP Proxy Attempted Proxy Login
+title: TC IDH - HTTP Proxy Attempted Proxy Login
 id: 6722bba8-5713-4463-b3ab-8432224928c2
 status: experimental
-description: Detects when the HTTP Proxy service on a SO IDH node has had a proxy login attempt.
+description: Detects when the HTTP Proxy service on a TC IDH node has had a proxy login attempt.
 author: Threat Code Solutions
 license: MIT
 references: 

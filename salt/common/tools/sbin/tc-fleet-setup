@@ -26,7 +26,7 @@ docker exec tc-fleet bash -c 'while [[ "$(curl -s -o /dev/null --insecure -w ''%
 # Create Threat Code Fleet Service Account + Setup Fleet
 FLEET_SA_EMAIL=$(lookup_pillar_secret fleet_sa_email)
 FLEET_SA_PW=$(lookup_pillar_secret fleet_sa_password)
-docker exec tc-fleet fleetctl setup --email $FLEET_SA_EMAIL --password $FLEET_SA_PW --name SO_ServiceAccount --org-name SO
+docker exec tc-fleet fleetctl setup --email $FLEET_SA_EMAIL --password $FLEET_SA_PW --name TC_ServiceAccount --org-name SO
 
 # Create User Account
 echo "$USER_PW" | tc-fleet-user-add "$USER_EMAIL"

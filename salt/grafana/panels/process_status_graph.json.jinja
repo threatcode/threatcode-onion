@@ -170,7 +170,7 @@
       "measurement": "processes",
       "orderByTime": "ASC",
       "policy": "default",
-      "query": "SELECT mean(mean_running) as trend_running, mean(mean_blocked) as trend_blocked, mean(mean_sleeping) as trend_sleeping, mean(mean_stopped) as trend_stopped, mean(mean_zombies) as trend_zombies, mean(mean_paging) as trend_paging, mean(mean_unknown) as trend_unknown FROM \"so_long_term\".\"processes\" WHERE host =~ /$servername$/ AND $timeFilter GROUP BY time($__interval), host fill(linear) ORDER BY asc",
+      "query": "SELECT mean(mean_running) as trend_running, mean(mean_blocked) as trend_blocked, mean(mean_sleeping) as trend_sleeping, mean(mean_stopped) as trend_stopped, mean(mean_zombies) as trend_zombies, mean(mean_paging) as trend_paging, mean(mean_unknown) as trend_unknown FROM \"tc_long_term\".\"processes\" WHERE host =~ /$servername$/ AND $timeFilter GROUP BY time($__interval), host fill(linear) ORDER BY asc",
       "rawQuery": true,
       "refId": "A",
       "resultFormat": "time_series",

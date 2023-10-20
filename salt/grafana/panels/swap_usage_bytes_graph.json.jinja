@@ -83,7 +83,7 @@
           }
         ]
       ],
-      "query": "SELECT mean(mean_used) as \"trend_used\", mean(mean_total) as \"trend_total\" FROM \"so_long_term\".\"swap\" WHERE host =~ /$servername$/ AND $timeFilter GROUP BY time($__interval), host ORDER BY asc",
+      "query": "SELECT mean(mean_used) as \"trend_used\", mean(mean_total) as \"trend_total\" FROM \"tc_long_term\".\"swap\" WHERE host =~ /$servername$/ AND $timeFilter GROUP BY time($__interval), host ORDER BY asc",
       "rawQuery": true,
       "alias": "$tag_host: $col",
       "hide": false

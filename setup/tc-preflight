@@ -116,12 +116,12 @@ check_misc_urls() {
 		printf '%s' "$misc_url_str" | tee -a "$preflight_log"
 	fi
 
-	local so_version
-	so_version=$(cat ../VERSION)
+	local tc_version
+	tc_version=$(cat ../VERSION)
 	local url_arr=(
 		"https://raw.githubusercontent.com/ThreatCode/threatcode/master/KEYS"
 		"https://github.com/Neo23x0/signature-base"
-		"https://sigs.threatcode.net/$so_version/threatcode-$so_version.iso.sig"
+		"https://sigs.threatcode.net/$tc_version/threatcode-$tc_version.iso.sig"
 		"https://ghcr.io/"
 		"https://rules.emergingthreats.net/open/"
 		"https://rules.emergingthreatspro.com/"

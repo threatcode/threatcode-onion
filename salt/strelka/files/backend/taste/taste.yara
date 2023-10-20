@@ -39,7 +39,7 @@ rule cpio_file
         $a at 0
 }
 
-rule iso_file
+rule itc_file
 {
     meta:
         type = "archive"
@@ -182,7 +182,7 @@ rule doc_subheader_file
         uint32(0) == 0x00C1A5EC
 }
 
-rule mso_file
+rule mtc_file
 {
     meta:
         type = "document"

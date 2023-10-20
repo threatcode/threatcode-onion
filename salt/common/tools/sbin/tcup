@@ -672,7 +672,7 @@ post_to_2.3.110() {
   echo "Removing old Elasticsearch index templates"
   [ -d /opt/tc/saltstack/default/salt/elasticsearch/templates/so ] && rm -rf /opt/tc/saltstack/default/salt/elasticsearch/templates/so
   echo "Updating Kibana dashboards"
-  salt-call state.apply kibana.so_savedobjects_defaults queue=True
+  salt-call state.apply kibana.tc_savedobjects_defaults queue=True
   POSTVERSION=2.3.110
 }
 

@@ -8,7 +8,7 @@
 
 . /usr/sbin/tc-common
 
-echo -e "\nThis script is used to reduce the size of InfluxDB by downsampling old data into the so_long_term retention policy."
+echo -e "\nThis script is used to reduce the size of InfluxDB by downsampling old data into the tc_long_term retention policy."
 
 echo -e "\nInfluxDB will now be downsampled. This could take a few hours depending on how large the database is and hardware resources available."
 read -r -p "Are you sure you want to continue? [y/N] " yorn
@@ -20,7 +20,7 @@ if [[ "$yorn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 
   day=0
   startdate=`date`
-  while docker exec -t tc-influxdb /bin/bash -c "influx -ssl -unsafeSsl -database telegraf -execute \"SELECT mean(*) INTO \"so_long_term\".\"{{measurement}}\" FROM \"autogen\".\"{{measurement}}\" WHERE \"time\" >= '2020-07-21T00:00:00.0000000Z' + ${day}d AND \"time\" <= '2020-07-21T00:00:00.0000000Z' + $((day+1))d GROUP BY time(5m),*\""; do
+  while docker exec -t tc-influxdb /bin/bash -c "influx -ssl -unsafeSsl -database telegraf -execute \"SELECT mean(*) INTO \"tc_long_term\".\"{{measurement}}\" FROM \"autogen\".\"{{measurement}}\" WHERE \"time\" >= '2020-07-21T00:00:00.0000000Z' + ${day}d AND \"time\" <= '2020-07-21T00:00:00.0000000Z' + $((day+1))d GROUP BY time(5m),*\""; do
     # why 2020-07-21? 
     migrationdate=`date -d "2020-07-21 + ${day} days" +"%y-%m-%d"`
 

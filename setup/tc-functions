@@ -110,11 +110,11 @@ addtotab_generate_templates() {
 }
 
 add_socore_user_manager() {
-	so_add_user "socore" "939" "939" "/opt/so" >> "$setup_log" 2>&1
+	tc_add_user "socore" "939" "939" "/opt/so" >> "$setup_log" 2>&1
 }
 
 add_soremote_user_manager() {
-	so_add_user "soremote" "947" "947" "/home/soremote" "$SOREMOTEPASS1" >> "$setup_log" 2>&1
+	tc_add_user "soremote" "947" "947" "/home/soremote" "$SOREMOTEPASS1" >> "$setup_log" 2>&1
 }
 
 add_web_user() {
@@ -194,14 +194,14 @@ check_admin_pass() {
 
 check_manager_state() {
 	echo "Checking state of manager services. This may take a moment..."
-	retry 2 15 "__check_so_status" >> $setup_log 2>&1 && retry 2 15 "__check_salt_master" >> $setup_log 2>&1 && return 0 || return 1
+	retry 2 15 "__check_tc_status" >> $setup_log 2>&1 && retry 2 15 "__check_salt_master" >> $setup_log 2>&1 && return 0 || return 1
 }
 
-__check_so_status() {
-	local so_status_output
-	so_status_output=$($sshcmd -i /root/.ssh/so.key soremote@"$MSRV" cat /opt/tc/log/tcstatus/status.log)
-	[[ -z $so_status_output ]] && so_status_output=1
-	return $so_status_output
+__check_tc_status() {
+	local tc_status_output
+	tc_status_output=$($sshcmd -i /root/.ssh/so.key soremote@"$MSRV" cat /opt/tc/log/tcstatus/status.log)
+	[[ -z $tc_status_output ]] && tc_status_output=1
+	return $tc_status_output
 }
 
 __check_salt_master() {
@@ -645,7 +645,7 @@ collect_proxy() {
 		if whiptail_invalid_proxy; then
 			collect_proxy_details no_ask
 		else
-			so_proxy=""
+			tc_proxy=""
 			break
 		fi
 	done
@@ -677,14 +677,14 @@ collect_proxy_details() {
 			for prefix in "${url_prefixes[@]}"; do
 				if echo "$proxy_addr" | grep -q "$prefix"; then
 					local proxy=${proxy_addr#"$prefix"}
-					so_proxy="${prefix}${proxy_user}:${proxy_pass}@${proxy}"
+					tc_proxy="${prefix}${proxy_user}:${proxy_pass}@${proxy}"
 					break
 				fi
 			done
 		else
-			so_proxy="$proxy_addr"
+			tc_proxy="$proxy_addr"
 		fi
-		export so_proxy
+		export tc_proxy
 	else
 		return 1
 	fi
@@ -715,13 +715,13 @@ collect_redirect_host_validate() {
 	done
 }
 
-collect_so_allow() {
-	if whiptail_so_allow_yesno; then
-		whiptail_so_allow
+collect_tc_allow() {
+	if whiptail_tc_allow_yesno; then
+		whiptail_tc_allow
 
 		while ! valid_cidr "$ALLOW_CIDR" && ! valid_ip4 "$ALLOW_CIDR"; do
 			whiptail_invalid_input
-			whiptail_so_allow "$ALLOW_CIDR"
+			whiptail_tc_allow "$ALLOW_CIDR"
 		done
 	fi
 }
@@ -1608,7 +1608,7 @@ install_cleanup() {
 		sed -i '/tc-setup/d' /etc/sudoers
 	fi
 
-	if [[ -z $SO_ERROR ]]; then
+	if [[ -z $TC_ERROR ]]; then
 		echo "Setup completed at $(date)" >> "$setup_log" 2>&1
 	fi
 }
@@ -1672,7 +1672,7 @@ manager_pillar() {
 		"manager:"\
 		"  mainip: '$MAINIP'"\
 		"  mainint: '$MNIC'"\
-		"  proxy: '$so_proxy'"\
+		"  proxy: '$tc_proxy'"\
 		"  no_proxy: '$no_proxy_string'"\
 		"  esheap: '$ES_HEAP_SIZE'"\
 		"  esclustername: '{{ grains.host }}'"\
@@ -2078,7 +2078,7 @@ print_salt_state_apply() {
 proxy_validate() {
 	echo "Testing proxy..."
 	local test_url="https://raw.githubusercontent.com/ThreatCode/threatcode/master/KEYS"
-	proxy_test_err=$(curl -sS "$test_url" --proxy "$so_proxy" --connect-timeout 5 2>&1) # set short connection timeout so user doesn't sit waiting for proxy test to timeout
+	proxy_test_err=$(curl -sS "$test_url" --proxy "$tc_proxy" --connect-timeout 5 2>&1) # set short connection timeout so user doesn't sit waiting for proxy test to timeout
 	local ret=$?
 
 	if [[ $ret != 0 ]]; then
@@ -2181,11 +2181,11 @@ reinstall_init() {
 		# Backup /opt/so since we'll be rebuilding this directory during setup
 		backup_dir /opt/so "$date_string"
 		# We need to restore these files during a reinstall so python3-influxdb state doesn't try to patch again
-		restore_file "/opt/so_old_$date_string/state/influxdb_continuous_query.py.patched" "/opt/tc/state/"
-		restore_file "/opt/so_old_$date_string/state/influxdb_retention_policy.py.patched" "/opt/tc/state/"
-		restore_file "/opt/so_old_$date_string/state/influxdbmod.py.patched" "/opt/tc/state/"
+		restore_file "/opt/tc_old_$date_string/state/influxdb_continuous_query.py.patched" "/opt/tc/state/"
+		restore_file "/opt/tc_old_$date_string/state/influxdb_retention_policy.py.patched" "/opt/tc/state/"
+		restore_file "/opt/tc_old_$date_string/state/influxdbmod.py.patched" "/opt/tc/state/"
 		# If the elastic license has been accepted restore the state file
-		restore_file "/opt/so_old_$date_string/state/yeselastic.txt" "/opt/tc/state/"
+		restore_file "/opt/tc_old_$date_string/state/yeselastic.txt" "/opt/tc/state/"
 
 		# Backup directories in /nsm to prevent app errors
 		backup_dir /nsm/mysql "$date_string"
@@ -2486,7 +2486,7 @@ set_proxy() {
 	# Set proxy environment variables used by curl, wget, docker, and others
 	{
 		echo "export use_proxy=on"
-		echo "export http_proxy=\"${so_proxy}\""
+		echo "export http_proxy=\"${tc_proxy}\""
 		echo "export https_proxy=\"\$http_proxy\""
 		echo "export ftp_proxy=\"\$http_proxy\""
 		echo "export no_proxy=\"${no_proxy_string}\""
@@ -2499,8 +2499,8 @@ set_proxy() {
 	# Create proxy config for dockerd 
 	printf '%s\n'\
 		"[Service]"\
-		"Environment=\"HTTP_PROXY=${so_proxy}\""\
-		"Environment=\"HTTPS_PROXY=${so_proxy}\""\
+		"Environment=\"HTTP_PROXY=${tc_proxy}\""\
+		"Environment=\"HTTPS_PROXY=${tc_proxy}\""\
 		"Environment=\"NO_PROXY=${no_proxy_string}\"" > /etc/systemd/system/docker.service.d/http-proxy.conf
 
 	systemctl daemon-reload
@@ -2514,9 +2514,9 @@ set_proxy() {
 		"  {"\
 		"    \"default\":"\
 		"    {"\
-		"      \"httpProxy\":\"${so_proxy}\","\
-		"      \"httpsProxy\":\"${so_proxy}\","\
-		"      \"ftpProxy\":\"${so_proxy}\","\
+		"      \"httpProxy\":\"${tc_proxy}\","\
+		"      \"httpsProxy\":\"${tc_proxy}\","\
+		"      \"ftpProxy\":\"${tc_proxy}\","\
 		"      \"noProxy\":\"${no_proxy_string}\""\
 		"    }"\
 		"  }"\
@@ -2524,18 +2524,18 @@ set_proxy() {
 
 	# Set proxy for package manager
 	if [[ $is_centos ]]; then
-		echo "proxy=$so_proxy" >> /etc/yum.conf
+		echo "proxy=$tc_proxy" >> /etc/yum.conf
 	else
 		# Set it up so the updates roll through the manager
 		printf '%s\n'\
-			"Acquire::http::Proxy \"$so_proxy\";"\
-			"Acquire::https::Proxy \"$so_proxy\";" > /etc/apt/apt.conf.d/00-proxy.conf
+			"Acquire::http::Proxy \"$tc_proxy\";"\
+			"Acquire::https::Proxy \"$tc_proxy\";" > /etc/apt/apt.conf.d/00-proxy.conf
 	fi
 
 	# Set global git proxy
 	printf '%s\n'\
 		"[http]"\
-		"  proxy = ${so_proxy}" > /etc/gitconfig
+		"  proxy = ${tc_proxy}" > /etc/gitconfig
 }
 
 setup_salt_master_dirs() {
@@ -2827,7 +2827,7 @@ set_updates() {
 }
 
 # $5 => (optional) password variable
-so_add_user() {
+tc_add_user() {
 	local username=$1
 	local uid=$2
 	local gid=$3

@@ -1,7 +1,7 @@
-title: SO IDH - SSH Accessed
+title: TC IDH - SSH Accessed
 id: b7a09f0a-88ca-4fe0-bc8a-92106133e231
 status: experimental
-description: Detects when the SSH service on a SO IDH node has had a new connection (logtype 4000) or login attempt (logtype 4002).
+description: Detects when the SSH service on a TC IDH node has had a new connection (logtype 4000) or login attempt (logtype 4002).
 author: Threat Code Solutions
 license: MIT
 references: 

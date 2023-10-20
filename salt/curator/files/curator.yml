@@ -4,8 +4,8 @@
   {%- set elasticsearch = salt['pillar.get']('manager:mainip', '') -%}
 {%- endif %}
 {%- if salt['pillar.get']('elasticsearch:auth:enabled') is sameas true %}
-{%-   set ES_USER = salt['pillar.get']('elasticsearch:auth:users:so_elastic_user:user', '') %}
-{%-   set ES_PASS = salt['pillar.get']('elasticsearch:auth:users:so_elastic_user:pass', '') %}
+{%-   set ES_USER = salt['pillar.get']('elasticsearch:auth:users:tc_elastic_user:user', '') %}
+{%-   set ES_PASS = salt['pillar.get']('elasticsearch:auth:users:tc_elastic_user:pass', '') %}
 {%- else %}
 {%-   set ES_USER = '' %}
 {%-   set ES_PASS = '' %}

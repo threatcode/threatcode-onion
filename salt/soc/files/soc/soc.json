@@ -30,8 +30,8 @@
 {%- import_json "soc/files/soc/presets.tlp.json" as presets_tlp %}
 {%- set DNET = salt['pillar.get']('global:dockernet', '172.17.0.0') %}
 {%- if salt['pillar.get']('elasticsearch:auth:enabled') is sameas true %}
-{%-   set ES_USER = salt['pillar.get']('elasticsearch:auth:users:so_elastic_user:user', '') %} 
-{%-   set ES_PASS = salt['pillar.get']('elasticsearch:auth:users:so_elastic_user:pass', '') %}
+{%-   set ES_USER = salt['pillar.get']('elasticsearch:auth:users:tc_elastic_user:user', '') %} 
+{%-   set ES_PASS = salt['pillar.get']('elasticsearch:auth:users:tc_elastic_user:pass', '') %}
 {%- else %}
 {%-   set ES_USER = '' %}
 {%-   set ES_PASS = '' %}
@@ -227,7 +227,7 @@
         "viewEnabled": true,
         "createLink": "/case/create",
         "eventFields": {{ cases_eventfields | json }},
-        "queryBaseFilter": "_index:\"*:tc-case\" AND so_kind:case",
+        "queryBaseFilter": "_index:\"*:tc-case\" AND tc_kind:case",
         "queryToggleFilters": [
         ],
         "queries": {{ cases_queries | json }},

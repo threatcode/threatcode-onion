@@ -122,9 +122,9 @@ telegraf_database:
 
 {% for dest_rp in influxdb.downsample.keys() %}
   {% for measurement in influxdb.downsample[dest_rp].get('measurements', []) %}
-so_downsample_{{measurement}}_cq:
+tc_downsample_{{measurement}}_cq:
   influxdb_continuous_query.present:
-    - name: so_downsample_{{measurement}}_cq
+    - name: tc_downsample_{{measurement}}_cq
     - database: telegraf
     - query: SELECT mean(*) INTO "{{dest_rp}}"."{{measurement}}" FROM "{{measurement}}" GROUP BY time({{influxdb.downsample[dest_rp].resolution}}),*
     - ssl: True

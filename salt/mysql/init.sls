@@ -112,7 +112,7 @@ tc-mysql:
     - onchanges:
       - docker_container: tc-mysql
   module.run:
-    - so.mysql_conn:
+    - tc.mysql_conn:
       - retry: 300
     - onchanges:
       - cmd: tc-mysql

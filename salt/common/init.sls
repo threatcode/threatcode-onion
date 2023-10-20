@@ -61,7 +61,7 @@ sosaltstackperms:
     - group: 939
     - dir_mode: 770
 
-so_log_perms:
+tc_log_perms:
   file.directory:
     - name: /opt/tc/log
     - dir_mode: 755

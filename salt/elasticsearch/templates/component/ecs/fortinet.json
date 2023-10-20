@@ -2480,7 +2480,7 @@
                 "rssi": {
                   "type": "long"
                 },
-                "rsso_key": {
+                "rstc_key": {
                   "ignore_above": 1024,
                   "type": "keyword",
                   "fields": {

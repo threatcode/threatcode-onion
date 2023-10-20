@@ -123,7 +123,7 @@ function validateEmail() {
 function hashPassword() {
   password=$1
 
-  passwordHash=$(echo "${password}" | htpasswd -niBC $bcryptRounds SOUSER)
+  passwordHash=$(echo "${password}" | htpasswd -niBC $bcryptRounds TCUSER)
   passwordHash=$(echo "$passwordHash" | cut -c 11-)
   passwordHash="\$2a${passwordHash}" # still waiting for https://github.com/elastic/elasticsearch/issues/51132
   echo "$passwordHash"
@@ -231,19 +231,19 @@ function syncElastic() {
 
   authPillarJson=$(lookup_salt_value "auth" "elasticsearch" "pillar" "json")
 
-  syncElasticSystemUser "$authPillarJson" "so_elastic_user"  "$usersTmpFile"
-  syncElasticSystemUser "$authPillarJson" "so_kibana_user"   "$usersTmpFile"
-  syncElasticSystemUser "$authPillarJson" "so_logstash_user" "$usersTmpFile"
-  syncElasticSystemUser "$authPillarJson" "so_beats_user"    "$usersTmpFile"
-  syncElasticSystemUser "$authPillarJson" "so_monitor_user"  "$usersTmpFile"
+  syncElasticSystemUser "$authPillarJson" "tc_elastic_user"  "$usersTmpFile"
+  syncElasticSystemUser "$authPillarJson" "tc_kibana_user"   "$usersTmpFile"
+  syncElasticSystemUser "$authPillarJson" "tc_logstash_user" "$usersTmpFile"
+  syncElasticSystemUser "$authPillarJson" "tc_beats_user"    "$usersTmpFile"
+  syncElasticSystemUser "$authPillarJson" "tc_monitor_user"  "$usersTmpFile"
 
-  syncElasticSystemRole "$authPillarJson" "so_elastic_user"  "superuser" "$rolesTmpFile"
-  syncElasticSystemRole "$authPillarJson" "so_kibana_user"   "kibana_system" "$rolesTmpFile"
-  syncElasticSystemRole "$authPillarJson" "so_logstash_user" "superuser" "$rolesTmpFile"
-  syncElasticSystemRole "$authPillarJson" "so_beats_user"    "superuser" "$rolesTmpFile"
-  syncElasticSystemRole "$authPillarJson" "so_monitor_user"  "remote_monitoring_collector" "$rolesTmpFile"
-  syncElasticSystemRole "$authPillarJson" "so_monitor_user"  "remote_monitoring_agent" "$rolesTmpFile"
-  syncElasticSystemRole "$authPillarJson" "so_monitor_user"  "monitoring_user" "$rolesTmpFile"
+  syncElasticSystemRole "$authPillarJson" "tc_elastic_user"  "superuser" "$rolesTmpFile"
+  syncElasticSystemRole "$authPillarJson" "tc_kibana_user"   "kibana_system" "$rolesTmpFile"
+  syncElasticSystemRole "$authPillarJson" "tc_logstash_user" "superuser" "$rolesTmpFile"
+  syncElasticSystemRole "$authPillarJson" "tc_beats_user"    "superuser" "$rolesTmpFile"
+  syncElasticSystemRole "$authPillarJson" "tc_monitor_user"  "remote_monitoring_collector" "$rolesTmpFile"
+  syncElasticSystemRole "$authPillarJson" "tc_monitor_user"  "remote_monitoring_agent" "$rolesTmpFile"
+  syncElasticSystemRole "$authPillarJson" "tc_monitor_user"  "monitoring_user" "$rolesTmpFile"
 
   if [[ -f "$databasePath" && -f "$socRolesFile" ]]; then
     # Append the SOC users 

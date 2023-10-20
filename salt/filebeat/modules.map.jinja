@@ -1,7 +1,7 @@
 {% import_yaml 'filebeat/thirdpartydefaults.yaml' as TPDEFAULTS %}
 {% import_yaml 'filebeat/threatcodedefaults.yaml' as SODEFAULTS %}
 {% set THIRDPARTY = salt['pillar.get']('filebeat:third_party_filebeat', default=TPDEFAULTS.third_party_filebeat, merge=True) %}
-{% set SO = salt['pillar.get']('filebeat:threatcode_filebeat', default=SODEFAULTS.threatcode_filebeat, merge=True) %}
+{% set TC = salt['pillar.get']('filebeat:threatcode_filebeat', default=SODEFAULTS.threatcode_filebeat, merge=True) %}
 {% set MODULESMERGED = salt['defaults.merge'](SO, THIRDPARTY, in_place=False) %}
 
 {% set MODULESENABLED = [] %}

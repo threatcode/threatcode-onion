@@ -1179,7 +1179,7 @@
                         }
                       }
                     },
-                    "sso_extension_version": {
+                    "stc_extension_version": {
                       "ignore_above": 1024,
                       "type": "keyword",
                       "fields": {

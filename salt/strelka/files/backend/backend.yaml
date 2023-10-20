@@ -193,7 +193,7 @@ scanners:
           - 'application/x-xar'
           - 'xar_file'
           - 'arj_file'
-          - 'iso_file'
+          - 'itc_file'
           - 'application/x-debian-package'
           - 'debian_package_file'
       priority: 5
@@ -382,7 +382,7 @@ scanners:
           - 'application/xml'
           - 'text/xml'
           - 'xml_file'
-          - 'mso_file'
+          - 'mtc_file'
           - 'soap_file'
       priority: 5
   'ScanYara':

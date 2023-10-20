@@ -976,7 +976,7 @@
                             }
                           }
                         },
-                        "country_iso_code": {
+                        "country_itc_code": {
                           "ignore_above": 1024,
                           "type": "keyword",
                           "fields": {
@@ -1019,7 +1019,7 @@
                             }
                           }
                         },
-                        "region_iso_code": {
+                        "region_itc_code": {
                           "ignore_above": 1024,
                           "type": "keyword",
                           "fields": {
@@ -2584,7 +2584,7 @@
                         }
                       }
                     },
-                    "country_iso_code": {
+                    "country_itc_code": {
                       "ignore_above": 1024,
                       "type": "keyword",
                       "fields": {
@@ -2627,7 +2627,7 @@
                         }
                       }
                     },
-                    "region_iso_code": {
+                    "region_itc_code": {
                       "ignore_above": 1024,
                       "type": "keyword",
                       "fields": {

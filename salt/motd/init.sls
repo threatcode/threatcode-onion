@@ -1,10 +1,10 @@
 {% from 'allowed_states.map.jinja' import allowed_states %}
 {% if sls in allowed_states %}
 
-so_motd:
+tc_motd:
   file.managed:
     - name: /etc/motd
-    - source: salt://motd/files/so_motd.jinja
+    - source: salt://motd/files/tc_motd.jinja
     - template: jinja
 
 {% else %}

@@ -1,7 +1,7 @@
-title: SO IDH - HTTP Login Attempt
+title: TC IDH - HTTP Login Attempt
 id: 19449e62-93fa-40bd-8d0a-2564535d3652
 status: experimental
-description: Detects when the HTTP service on a SO IDH node has had a login attempt.
+description: Detects when the HTTP service on a TC IDH node has had a login attempt.
 author: Threat Code Solutions
 license: MIT
 references: 

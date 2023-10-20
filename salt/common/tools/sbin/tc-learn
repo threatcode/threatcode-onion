@@ -18,7 +18,7 @@ import docker
 import pty
 
 minion_pillar_dir = '/opt/tc/saltstack/local/pillar/minions'
-so_status_conf = '/opt/tc/conf/tc-status/tc-status.conf'
+tc_status_conf = '/opt/tc/conf/tc-status/tc-status.conf'
 proc: subprocess.CompletedProcess = None
 
 # Temp store of modules, will likely be broken out into salt
@@ -90,8 +90,8 @@ def write_pillar(pillar: str, content: dict):
     sys.exit(3)
 
 
-def mod_so_status(action: str, item: str):
-  with open(so_status_conf, 'a+') as conf:
+def mod_tc_status(action: str, item: str):
+  with open(tc_status_conf, 'a+') as conf:
     conf.seek(0)
     containers = conf.readlines()
     
@@ -191,7 +191,7 @@ def enable_disable_modules(args, enable: bool):
   if 'all' in args.modules:
     for module, details in pillar_modules.items():
       details['enabled'] = enable
-      mod_so_status(action_str, module)
+      mod_tc_status(action_str, module)
       if enable: pull_image(module)
     args.pillar_dict.update()
     write_pillar(args.pillar, args.pillar_dict)
@@ -206,7 +206,7 @@ def enable_disable_modules(args, enable: bool):
           if enable and pull_image(module) != 0:
             continue
           pillar_modules[module]['enabled'] = enable
-          mod_so_status(action_str, module)
+          mod_tc_status(action_str, module)
           write_needed = True
     if write_needed:
       args.pillar_dict.update()

@@ -42,11 +42,11 @@
     },
     "mappings": {
       "properties": {
-        "so_audit_doc_id": {
+        "tc_audit_doc_id": {
           "ignore_above": 1024,
           "type": "keyword"
         },
-        "so_related": {
+        "tc_related": {
           "properties": {
             "createTime": {
               "type": "date"
@@ -73,7 +73,7 @@
         "@timestamp": {
           "type": "date"
         },
-        "so_artifactstream": {
+        "tc_artifactstream": {
           "properties": {
             "createTime": {
               "type": "date"
@@ -87,7 +87,7 @@
             }
           }
         },
-        "so_comment": {
+        "tc_comment": {
           "properties": {
             "createTime": {
               "type": "date"
@@ -105,15 +105,15 @@
             }
           }
         },
-        "so_kind": {
+        "tc_kind": {
           "ignore_above": 1024,
           "type": "keyword"
         },
-        "so_operation": {
+        "tc_operation": {
           "ignore_above": 1024,
           "type": "keyword"
         },
-        "so_case": {
+        "tc_case": {
           "properties": {
             "severity": {
               "ignore_above": 1024,
@@ -171,7 +171,7 @@
             }
           }
         },
-        "so_artifact": {
+        "tc_artifact": {
           "properties": {
             "artifactType": {
               "ignore_above": 1024,

@@ -557,7 +557,7 @@
                     }
                   }
                 },
-                "iso_timestamp": {
+                "itc_timestamp": {
                   "type": "date"
                 },
                 "issuer": {

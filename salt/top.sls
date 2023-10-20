@@ -121,7 +121,7 @@ base:
     - elasticsearch
     {%- endif %}
     {%- if KIBANA %}
-    - kibana.so_savedobjects_defaults
+    - kibana.tc_savedobjects_defaults
     {%- endif %}
     - pcap
     - suricata
@@ -193,7 +193,7 @@ base:
     - redis
     {%- endif %}
     {%- if KIBANA %}
-    - kibana.so_savedobjects_defaults
+    - kibana.tc_savedobjects_defaults
     {%- endif %}
     - curator
     {%- if ELASTALERT %}
@@ -257,7 +257,7 @@ base:
     - redis
     {%- endif %}
     {%- if KIBANA %}
-    - kibana.so_savedobjects_defaults
+    - kibana.tc_savedobjects_defaults
     {%- endif %}
     - pcap
     - suricata
@@ -355,7 +355,7 @@ base:
     {%- endif %}
     - curator
     {%- if KIBANA %}
-    - kibana.so_savedobjects_defaults
+    - kibana.tc_savedobjects_defaults
     {%- endif %}
     {%- if ELASTALERT %}
     - elastalert
@@ -460,7 +460,7 @@ base:
     - elasticsearch
     {%- endif %}
     {%- if KIBANA %}
-    - kibana.so_savedobjects_defaults
+    - kibana.tc_savedobjects_defaults
     {%- endif %}
     {%- if FILEBEAT %}
     - filebeat

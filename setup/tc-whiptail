@@ -513,7 +513,7 @@ whiptail_end_settings() {
 		__append_end_msg "DNS Domain: $MSEARCH"
 	fi
 
-	if [[ -n $so_proxy ]]; then
+	if [[ -n $tc_proxy ]]; then
 		__append_end_msg "Proxy:"
 		__append_end_msg "  Server URL: $proxy_addr"
 		[[ -n $proxy_user ]] && __append_end_msg "  User: $proxy_user"
@@ -1149,7 +1149,7 @@ whiptail_net_method() {
 	local options=(
 		" Direct " ""
 	)
-	local proxy_desc="proxy the traffic for git, docker client, wget, curl, ${pkg_mngr}, and various other SO components through a separate server in your environment."
+	local proxy_desc="proxy the traffic for git, docker client, wget, curl, ${pkg_mngr}, and various other TC components through a separate server in your environment."
 
 	if [[ $is_minion ]]; then
 		read -r -d '' options_msg <<- EOM
@@ -1740,7 +1740,7 @@ whiptail_proxy_ask() {
 
 	local pkg_mngr
 	if [[ $OS = 'centos' ]]; then pkg_mngr="yum"; else pkg_mngr='apt'; fi
-	whiptail --title "$whiptail_title" --yesno "Do you want to proxy the traffic for git, docker client, wget, curl, ${pkg_mngr}, and various other SO components through a separate server in your environment?" 9 65 --defaultno
+	whiptail --title "$whiptail_title" --yesno "Do you want to proxy the traffic for git, docker client, wget, curl, ${pkg_mngr}, and various other TC components through a separate server in your environment?" 9 65 --defaultno
 }
 
 whiptail_proxy_addr() {
@@ -1959,7 +1959,7 @@ whiptail_setup_failed() {
 	whiptail --title "$whiptail_title" --msgbox "$message" $height 75
 }
 
-whiptail_so_allow_yesno() {
+whiptail_tc_allow_yesno() {
 	[ -n "$TESTING" ] && return
 
 	whiptail --title "$whiptail_title" \
@@ -1967,7 +1967,7 @@ whiptail_so_allow_yesno() {
 		8 75
 }
 
-whiptail_so_allow() {
+whiptail_tc_allow() {
 
 	[ -n "$TESTING" ] && return
 	

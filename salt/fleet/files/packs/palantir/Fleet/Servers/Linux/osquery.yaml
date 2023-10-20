@@ -161,9 +161,9 @@ spec:
   - description: Generates an event if ld.so.preload is present - used by rootkits
       such as Jynx
     interval: 3600
-    name: ld_so_preload_exists
+    name: ld_tc_preload_exists
     platform: linux
-    query: ld_so_preload_exists
+    query: ld_tc_preload_exists
     snapshot: true
   - description: Records system/user time, db size, and many other system metrics
     interval: 1800
@@ -471,7 +471,7 @@ kind: query
 spec:
   description: Generates an event if ld.so.preload is present - used by rootkits such
     as Jynx
-  name: ld_so_preload_exists
+  name: ld_tc_preload_exists
   query: SELECT * FROM file WHERE path='/etc/ld.so.preload' AND path!='';
 ---
 apiVersion: v1

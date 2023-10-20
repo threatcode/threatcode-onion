@@ -1,7 +1,7 @@
-title: SO IDH - VNC Login Attempt
+title: TC IDH - VNC Login Attempt
 id: 2d4ec11b-9d7c-464f-a9fa-e555e5cd605a
 status: experimental
-description: Detects when the VNC service on a SO IDH node has had a login attempt.
+description: Detects when the VNC service on a TC IDH node has had a login attempt.
 author: Threat Code Solutions
 license: MIT
 references: 

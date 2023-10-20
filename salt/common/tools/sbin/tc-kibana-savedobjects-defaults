@@ -5,7 +5,7 @@
 . /usr/sbin/tc-common
 
 echo $banner
-echo "Running kibana.so_savedobjects_defaults Salt state to restore default saved objects."
+echo "Running kibana.tc_savedobjects_defaults Salt state to restore default saved objects."
 printf "This could take a while if another Salt job is running. \nRun this command with --force to stop all Salt jobs before proceeding.\n"
 echo $banner
 
@@ -14,4 +14,4 @@ echo $banner
         salt-call saltutil.kill_all_jobs
     fi
 
-salt-call state.apply kibana.so_savedobjects_defaults -linfo queue=True
+salt-call state.apply kibana.tc_savedobjects_defaults -linfo queue=True

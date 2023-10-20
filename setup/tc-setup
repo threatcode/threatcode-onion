@@ -221,7 +221,7 @@ esac
 #set ssh commands that will be used based on if this is an automated test install or not
 set_ssh_cmds $automated
 
-# Allow execution of SO tools during setup
+# Allow execution of TC tools during setup
 local_sbin="$(pwd)/../salt/common/tools/sbin"
 export PATH=$PATH:$local_sbin
 
@@ -427,7 +427,7 @@ if ! [[ -f $install_opt_file ]]; then
 	reset_proxy
 	if [[ -z $is_airgap ]]; then
 		collect_net_method
-		[[ -n "$so_proxy" ]] && set_proxy >> $setup_log 2>&1
+		[[ -n "$tc_proxy" ]] && set_proxy >> $setup_log 2>&1
 	fi
 
 	if [[ $is_minion ]] && ! (compare_versions); then
@@ -440,7 +440,7 @@ if ! [[ -f $install_opt_file ]]; then
 			"MSRVIP=$MSRVIP" \
 			"is_airgap=$is_airgap" \
 			"NODE_DESCRIPTION=\"$NODE_DESCRIPTION\"" > "$install_opt_file"
-		[[ -n $so_proxy ]] && echo "so_proxy=$so_proxy" >> "$install_opt_file"
+		[[ -n $tc_proxy ]] && echo "tc_proxy=$tc_proxy" >> "$install_opt_file"
 		download_repo_tarball
 		exec bash /root/manager_setup/threatcode/setup/tc-setup "${original_args[@]}"
 	fi
@@ -684,7 +684,7 @@ else
 	FLEETNODEPASSWD1=$WEBPASSWD1
 fi
 
-if [[ $is_manager || $is_import ]]; then collect_so_allow; fi
+if [[ $is_manager || $is_import ]]; then collect_tc_allow; fi
 
 # This block sets REDIRECTIT which is used by a function outside the below subshell
 set_redirect >> $setup_log 2>&1
@@ -976,9 +976,9 @@ echo "1" > /root/accept_changes
 		salt-call state.apply -l info soc >> $setup_log 2>&1
 
 		set_progress_str 70 "$(print_salt_state_apply 'kibana')"
-		salt-call state.apply -l info kibana.so_config_load >> $setup_log 2>&1
-		salt-call state.apply -l info kibana.so_securitySolution_load >> $setup_log 2>&1
-		salt-call state.apply -l info kibana.so_dashboard_load >> $setup_log 2>&1
+		salt-call state.apply -l info kibana.tc_config_load >> $setup_log 2>&1
+		salt-call state.apply -l info kibana.tc_securitySolution_load >> $setup_log 2>&1
+		salt-call state.apply -l info kibana.tc_dashboard_load >> $setup_log 2>&1
 
 		set_progress_str 70 "Setting up default Space in Kibana"
 		tc-kibana-space-defaults >> $setup_log 2>&1
@@ -1101,17 +1101,17 @@ echo "1" > /root/accept_changes
 } | progress
 
 success=$(tail -10 $setup_log | grep Failed | awk '{ print $2}')
-if [[ $success != 0 ]]; then SO_ERROR=1; fi
+if [[ $success != 0 ]]; then TC_ERROR=1; fi
 
 # Check entire setup log for errors or unexpected salt states and ensure cron jobs are not reporting errors to root's mailbox
 # Ignore "Status .* was not found" due to output from salt http.query or http.wait_for_successful_query states used with retry
 # Uncaught exception, closing connection|Exception in callback None - this is seen during influxdb / http.wait_for_successful_query state for ubuntu reinstall
 if grep -E "ERROR|Result: False" $setup_log | grep -qvE "Status .* was not found|An exception occurred in this state|Uncaught exception, closing connection|Exception in callback None|deprecation: ERROR|code: 100|Running scope as unit" || [[ -s /var/spool/mail/root && "$setup_type" == "iso" ]]; then
-	SO_ERROR=1
+	TC_ERROR=1
 	grep --color=never "ERROR" "$setup_log" | grep -qvE "Status .* was not found|An exception occurred in this state|Uncaught exception, closing connection|Exception in callback None|deprecation: ERROR|code: 100|Running scope as unit" > "$error_log"
 fi
 
-if [[ -n $SO_ERROR ]]; then 
+if [[ -n $TC_ERROR ]]; then 
 	echo "Errors detected during setup; skipping post-setup steps to allow for analysis of failures." >> $setup_log 2>&1
 
 	SKIP_REBOOT=1

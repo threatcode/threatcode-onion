@@ -19,7 +19,7 @@ USER_EMAIL=$1
 FLEET_SA_EMAIL=$(lookup_pillar_secret fleet_sa_email)
 FLEET_SA_PW=$(lookup_pillar_secret fleet_sa_password)
 
-# Config fleetctl & login with the SO Service Account
+# Config fleetctl & login with the TC Service Account
 CONFIG_OUTPUT=$(docker exec tc-fleet fleetctl config set --address https://127.0.0.1:8080 --tls-skip-verify --url-prefix /fleet  2>&1 )
 SALOGIN_OUTPUT=$(docker exec tc-fleet fleetctl login --email $FLEET_SA_EMAIL --password $FLEET_SA_PW 2>&1)
 
