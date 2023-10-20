@@ -1,0 +1,9 @@
+sensor:
+  interface:
+    description: Main sensor monitoring interface.
+    helpLink: network.html
+    readonly: True
+  mtu:
+    description: Maximum Transmission Unit (MTU) of the sensor monitoring interface.
+    helpLink: network.html
+    readonly: True

@@ -1424,7 +1424,7 @@
                 },
                 {
                     "source_name": "PWCSofacy2014",
-                    "description": "Tom Lancaster and Michael Yip. (2014, December 05). APT28: Sofacy? TC-funny.. Retrieved March 6, 2017."
+                    "description": "Tom Lancaster and Michael Yip. (2014, December 05). APT28: Sofacy? So-funny.. Retrieved March 6, 2017."
                 }
             ],
             "description": "This object is deprecated as its content has been merged into the enterprise domain. Please see the [PRE](http://attack.mitre.org/matrices/enterprise/pre/) matrix for its replacement. The prior content of this page has been preserved [here](https://attack.mitre.org/versions/v7/techniques/T1328).\n\nDomain Names are the human readable names used to represent one or more IP addresses. They can be purchased or, in some cases, acquired for free. (Citation: PWCSofacy2014)",

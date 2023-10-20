@@ -1,5 +1,10 @@
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
 include:
-  - kibana
+  - kibana.enabled
 
 securitySolution_saved_objects:
   file.managed:
@@ -15,10 +20,10 @@ securitySolution_saved_objects_changes:
     - onchanges:
       - file: securitySolution_saved_objects
 
-tc-kibana-securitySolution_saved_objects-load:
+so-kibana-securitySolution_saved_objects-load:
   cmd.run:
-    - name: /usr/sbin/tc-kibana-config-load -u /opt/tc/conf/kibana/securitySolution_saved_objects.ndjson.template
+    - name: /usr/sbin/so-kibana-config-load -u /opt/tc/conf/kibana/securitySolution_saved_objects.ndjson.template
     - cwd: /opt/so
     - require:
-      - sls: kibana
+      - sls: kibana.enabled
       - file: securitySolution_saved_objects

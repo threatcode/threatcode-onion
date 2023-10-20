@@ -16,7 +16,8 @@
   "indices": [
     {
       "names": [
-        "tc-*"
+        "logs-*",
+        "so-*"
       ],
       "privileges": [
         "read",

@@ -1,6 +1,5 @@
-{%- set ES_USER = salt['pillar.get']('elasticsearch:auth:users:tc_elastic_user:user', '') %}
-{%- set ES_PASS = salt['pillar.get']('elasticsearch:auth:users:tc_elastic_user:pass', '') %}
 elastalert:
+  enabled: False
   config:
     rules_folder: /opt/elastalert/rules/
     scan_subdirectories: true
@@ -11,21 +10,12 @@ elastalert:
       minutes: 10
     old_query_limit:
       minutes: 5
-    es_host: {{salt['pillar.get']('manager:mainip', '')}}
-    es_port: {{salt['pillar.get']('manager:es_port', '')}}
+    es_port: 9200
     es_conn_timeout: 55
     max_query_size: 5000
-    #aws_region: us-east-1
-    #profile: test
-    #es_url_prefix: elasticsearch
     use_ssl: true
     verify_certs: false
-    #es_send_get_body_as: GET
-{%- if salt['pillar.get']('elasticsearch:auth:enabled') is sameas true %}
-    es_username: "{{ ES_USER }}"
-    es_password: "{{ ES_PASS }}"
-{%- endif %}
-    writeback_index: elastalert_status
+    writeback_index: elastalert
     alert_time_limit:
       days: 2
     index_settings:

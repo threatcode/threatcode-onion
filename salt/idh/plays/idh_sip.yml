@@ -1,8 +1,8 @@
-title: TC IDH - SIP Request
+title: SO IDH - SIP Request
 id: c2bd0439-2aac-416d-93f5-adad8aa1131b
 status: experimental
-description: Detects when the SIP service on a TC IDH node has had a SIP request sent to it.
-author: Threat Code Solutions
+description: Detects when the SIP service on a SO IDH node has had a SIP request sent to it.
+author: Security Onion Solutions
 license: MIT
 references: 
   - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration

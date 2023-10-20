@@ -1,0 +1,100 @@
+curator:
+  enabled: False
+  elasticsearch:
+    index_settings:
+      logs-import-so:
+        close: 73000
+        delete: 73001
+      logs-strelka-so:
+        close: 30
+        delete: 365
+      logs-suricata-so:
+        close: 30
+        delete: 365
+      logs-syslog-so:
+        close: 30
+        delete: 365
+      logs-zeek-so:
+        close: 30
+        delete: 365
+      logs-elastic_agent-metricbeat-default:
+        close: 30
+        delete: 365
+      logs-elastic_agent-osquerybeat-default:
+        close: 30
+        delete: 365
+      logs-elastic_agent-fleet_server-default:
+        close: 30
+        delete: 365
+      logs-elastic_agent-filebeat-default:
+        close: 30
+        delete: 365
+      logs-elastic_agent-default:
+        close: 30
+        delete: 365
+      logs-system-auth-default:
+        close: 30
+        delete: 365
+      logs-system-application-default:
+        close: 30
+        delete: 365
+      logs-system-security-default:
+        close: 30
+        delete: 365
+      logs-system-system-default:
+        close: 30
+        delete: 365
+      logs-system-syslog-default:
+        close: 30
+        delete: 365
+      logs-windows-powershell-default:
+        close: 30
+        delete: 365
+      logs-windows-sysmon_operational-default:
+        close: 30
+        delete: 365
+      tc-beats:
+        close: 30
+        delete: 365
+      tc-elasticsearch:
+        close: 30
+        delete: 365
+      tc-firewall:
+        close: 30
+        delete: 365
+      tc-ids:
+        close: 30
+        delete: 365
+      tc-import:
+        close: 73000
+        delete: 73001
+      tc-kratos:
+        close: 30
+        delete: 365
+      tc-kibana:
+        close: 30
+        delete: 365
+      tc-logstash:
+        close: 30
+        delete: 365
+      tc-netflow:
+        close: 30
+        delete: 365
+      tc-osquery:
+        close: 30
+        delete: 365
+      tc-ossec:
+        close: 30
+        delete: 365
+      tc-redis:
+        close: 30
+        delete: 365
+      tc-strelka:
+        close: 30
+        delete: 365
+      tc-syslog:
+        close: 30
+        delete: 365
+      tc-zeek:
+        close: 30
+        delete: 365

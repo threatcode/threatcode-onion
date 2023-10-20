@@ -4,7 +4,7 @@ import logging
 def status():
 
  cmd = "runuser -l zeek -c '/opt/zeek/bin/zeekctl status'"
- retval = __salt__['docker.run']('tc-zeek', cmd)
+ retval = __salt__['docker.run']('so-zeek', cmd)
  logging.info('zeekctl_module: zeekctl.status retval: %s' % retval)
 
  return retval

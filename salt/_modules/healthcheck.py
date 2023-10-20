@@ -82,7 +82,7 @@ def zeek():
   if retcode:
     zeek_restart = 1
     if calling_func != 'beacon':
-      docker_stop('tc-zeek')
+      docker_stop('so-zeek')
       states_to_apply.append('zeek')
   else:
     zeek_restart = 0

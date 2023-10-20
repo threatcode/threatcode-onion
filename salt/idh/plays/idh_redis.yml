@@ -1,8 +1,8 @@
-title: TC IDH - Redis Accessed
+title: SO IDH - Redis Accessed
 id: 61bd7f23-90c4-41b0-a70d-9991b863e3f7
 status: experimental
-description: Detects when the Redis service on a TC IDH node has had an action sent to it.
-author: Threat Code Solutions
+description: Detects when the Redis service on a SO IDH node has had an action sent to it.
+author: Security Onion Solutions
 license: MIT
 references: 
   - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration

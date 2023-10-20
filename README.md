@@ -1,41 +1,47 @@
-## Threat Code 2.3
+## Security Onion 2.4
 
-Threat Code 2.3 is here!
+Security Onion 2.4 is here!
 
 ## Screenshots
 
 Alerts
-![Alerts](./assets/images/screenshots/alerts.png)
+![Alerts](https://raw.githubusercontent.com/ThreatCode/threatcode-docs/2.4/images/50_alerts.png)
 
 Dashboards
-![Dashboards](./assets/images/screenshots/dashboards.png)
+![Dashboards](https://raw.githubusercontent.com/ThreatCode/threatcode-docs/2.4/images/51_dashboards.png)
 
 Hunt
-![Hunt](./assets/images/screenshots/hunt.png)
+![Hunt](https://raw.githubusercontent.com/ThreatCode/threatcode-docs/2.4/images/52_hunt.png)
 
-Cases
-![Cases](./assets/images/screenshots/cases-comments.png)
+PCAP
+![PCAP](https://raw.githubusercontent.com/ThreatCode/threatcode-docs/2.4/images/53_pcap.png)
+
+Grid
+![Grid](https://raw.githubusercontent.com/ThreatCode/threatcode-docs/2.4/images/57_grid.png)
+
+Config
+![Config](https://raw.githubusercontent.com/ThreatCode/threatcode-docs/2.4/images/61_config.png)
 
 ### Release Notes
 
-https://docs.threatcode.net/en/2.3/release-notes.html
+https://threatcode.github.io/docs/en/2.4/release-notes.html
 
 ### Requirements
 
-https://docs.threatcode.net/en/2.3/hardware.html
+https://threatcode.github.io/docs/en/2.4/hardware.html
 
 ### Download
 
-https://docs.threatcode.net/en/2.3/download.html
+https://threatcode.github.io/docs/en/2.4/download.html
 
 ### Installation
 
-https://docs.threatcode.net/en/2.3/installation.html
+https://threatcode.github.io/docs/en/2.4/installation.html
 
 ### FAQ
 
-https://docs.threatcode.net/en/2.3/faq.html
+https://threatcode.github.io/docs/en/2.4/faq.html
 
 ### Feedback
 
-https://docs.threatcode.net/en/2.3/community-support.html
+https://threatcode.github.io/docs/en/2.4/community-support.html

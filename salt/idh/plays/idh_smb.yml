@@ -1,8 +1,8 @@
-title: TC IDH - SMB Request
+title: SO IDH - SMB Request
 id: 3ef55cde-1edd-414e-b1ba-499db822aef7
 status: experimental
-description: Detects when the SMB service on a TC IDH node has been accessed.
-author: Threat Code Solutions
+description: Detects when the SMB service on a SO IDH node has been accessed.
+author: Security Onion Solutions
 license: MIT
 references: 
   - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration

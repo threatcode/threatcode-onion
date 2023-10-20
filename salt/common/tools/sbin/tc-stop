@@ -1,8 +1,13 @@
 #!/bin/bash
 
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
 
 
-# Usage: tc-stop  filebeat | kibana | playbook | thehive
+
+# Usage: tc-stop kibana | playbook | thehive
 
 . /usr/sbin/tc-common
 
@@ -15,6 +20,6 @@ if [ $# -ge 1 ]; then
     		*) docker stop tc-$1 ; docker rm tc-$1 ;;
 	esac
 else
-	echo -e "\nPlease provide an argument by running like tc-stop $component, or by using the component-specific script.\nEx. tc-stop filebeat, or tc-filebeat-stop\n"	
+	echo -e "\nPlease provide an argument by running like tc-stop $component, or by using the component-specific script.\nEx. tc-stop logstash, or tc-logstash-stop\n"	
 fi
 

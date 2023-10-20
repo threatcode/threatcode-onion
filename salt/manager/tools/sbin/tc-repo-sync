@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+NOROOT=1
+. /usr/sbin/tc-common
+
+set_version
+set_os
+salt_minion_count
+
+set -e
+
+curl --retry 5 --retry-delay 60 -A "reposync/$VERSION/$OS/$(uname -r)/$MINIONCOUNT" https://sigs.threatcode.net/checkup --output /tmp/checkup
+dnf reposync --norepopath -g --delete -m -c /opt/tc/conf/reposync/repodownload.conf --repoid=threatcodesync --download-metadata -p /nsm/repo/
+createrepo /nsm/repo

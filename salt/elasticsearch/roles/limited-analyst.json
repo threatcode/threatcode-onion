@@ -4,7 +4,8 @@
   "indices": [
     {
       "names": [
-        "tc-*"
+        "logs-*",
+        "so-*"
       ],
       "privileges": [
         "index",

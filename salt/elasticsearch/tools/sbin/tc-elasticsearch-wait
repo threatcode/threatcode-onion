@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. /usr/sbin/tc-common
+
+wait_for_web_response "https://localhost:9200/_cat/indices/.kibana*" "green open" 300 "curl -K /opt/tc/conf/elasticsearch/curl.config"

@@ -1,0 +1,260 @@
+logrotate:
+  config:
+    /opt/tc/log/idstools/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/nginx/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/soc/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/kratos/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/kibana/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/influxdb/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/elastalert/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/soctopus/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/curator/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/elasticagent/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/elasticagent/*_x_ndjson:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .ndjson
+      - dateext
+      - dateyesterday
+    /opt/tc/log/elasticfleet/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/elasticfleet/*_x_ndjson:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .ndjson
+      - dateext
+      - dateyesterday
+    /opt/tc/log/suricata/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/mysql/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/telegraf/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/redis/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/sensoroni/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/stenographer/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/salt/so-salt-minion-check:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/salt/minion:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/salt/master:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /nsm/idh/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/playbook/*_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+      - su root socore
+    /nsm/strelka/log/strelka_x_log:
+      - daily
+      - rotate 14
+      - missingok
+      - copytruncate
+      - compress
+      - create
+      - extension .log
+      - dateext
+      - dateyesterday
+    /opt/tc/log/sensor_clean_x_log:
+      - daily
+      - rotate 2
+      - missingok
+      - nocompress
+      - create
+      - sharedscripts

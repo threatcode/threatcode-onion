@@ -1,8 +1,9 @@
-# Threat Code Analyzers
+# Security Onion Analyzers
 
-Threat Code provides a means for performing data analysis on varying inputs. This data can be any data of interest sourced from event logs. Examples include hostnames, IP addresses, file hashes, URLs, etc. The analysis is conducted by one or more analyzers that understand that type of input. Analyzers come with the default installation of Threat Code. However, it is also possible to add additional analyzers to extend the analysis across additional areas or data types.
+Security Onion provides a means for performing data analysis on varying inputs. This data can be any data of interest sourced from event logs. Examples include hostnames, IP addresses, file hashes, URLs, etc. The analysis is conducted by one or more analyzers that understand that type of input. Analyzers come with the default installation of Security Onion. However, it is also possible to add additional analyzers to extend the analysis across additional areas or data types.
 
 ## Supported Observable Types
+
 The built-in analyzers support the following observable types:
 
 | Name                    | Domain | Hash  | IP    | Mail  | Other | URI   |  URL  | User Agent |
@@ -20,6 +21,7 @@ The built-in analyzers support the following observable types:
 | WhoisLookup             |&check; |&cross;|&cross;|&cross;|&cross;|&check;|&cross;|&cross;|
 
 ## Authentication
+
 Many analyzers require authentication, via an API key or similar. The table below illustrates which analyzers require authentication.
 
 | Name                    | Authn Req'd|
@@ -51,9 +53,9 @@ For more information about Python, see the [Python Documentation](https://docs.p
 
 ### Development
 
-Custom analyzers should be developed outside of the Threat Code cluster, in a proper software development environment, with version control or other backup mechanisms in place. The analyzer can be developed, unit tested, and integration tested without the need for a Threat Code installation. Once satisifed with the analyzer functionality the analyzer directory should be copied to the Threat Code manager node. 
+Custom analyzers should be developed outside of the Security Onion cluster, in a proper software development environment, with version control or other backup mechanisms in place. The analyzer can be developed, unit tested, and integration tested without the need for a Security Onion installation. Once satisifed with the analyzer functionality the analyzer directory should be copied to the Security Onion manager node. 
 
-Developing an analyzer directly on a Threat Code manager node is strongly discouraged, as loss of source code (and time and effort) can occur, should the management node suffer a catastrophic failure with disk storage loss.
+Developing an analyzer directly on a Security Onion manager node is strongly discouraged, as loss of source code (and time and effort) can occur, should the management node suffer a catastrophic failure with disk storage loss.
 
 For best results, avoid long, complicated functions in favor of short, discrete functions. This has several benefits:
 
@@ -64,11 +66,11 @@ For best results, avoid long, complicated functions in favor of short, discrete 
 
 ### Linting
 
-Source code should adhere to the [PEP 8 - Style Guide for Python Code](https://peps.python.org/pep-0008/). Developers can use the default configuration of `flake8` to validate conformance, or run the included `build.sh` inside the analyzers directory. Note that linting conformance is mandatory for analyzers that are contributed back to the Threat Code project.
+Source code should adhere to the [PEP 8 - Style Guide for Python Code](https://peps.python.org/pep-0008/). Developers can use the default configuration of `flake8` to validate conformance, or run the included `build.sh` inside the analyzers directory. Note that linting conformance is mandatory for analyzers that are contributed back to the Security Onion project.
 
 ### Testing
 
-Python's [unitest](https://docs.python.org/3/library/unittest.html) library can be used for covering analyzer code with unit tests. Unit tests are encouraged for custom analyzers, and mandatory for public analyzers submitted back to the Threat Code project.
+Python's [unitest](https://docs.python.org/3/library/unittest.html) library can be used for covering analyzer code with unit tests. Unit tests are encouraged for custom analyzers, and mandatory for public analyzers submitted back to the Security Onion project.
 
 If you are new to unit testing, please see the included `urlhaus_test.py` as an example.
 
@@ -77,11 +79,11 @@ Unit tests should be named following the pattern `<scriptname>_test.py`.
 
 ### Analyzer Package Structure
 
-Delpoyment of a custom analyzer entails copying the analyzer source directory and depenency wheel archives to the Threat Code manager node. The destination locations can be found inside the `threatcode` salt source directory tree. Using the [Saltstack](https://github.com/saltstack/salt) directory pattern allows Threat Code developers to add their own analyzers with minimal additional effort needed to upgrade to newer versions of Threat Code. When the _sensoroni_ salt state executes it will merge the default analyzers with any local analyzers, and copy the merged analyzers into the `/opt/tc/conf/sensoroni` directory. 
+Delpoyment of a custom analyzer entails copying the analyzer source directory and depenency wheel archives to the Security Onion manager node. The destination locations can be found inside the `threatcode` salt source directory tree. Using the [Saltstack](https://github.com/saltstack/salt) directory pattern allows Security Onion developers to add their own analyzers with minimal additional effort needed to upgrade to newer versions of Security Onion. When the _sensoroni_ salt state executes it will merge the default analyzers with any local analyzers, and copy the merged analyzers into the `/opt/tc/conf/sensoroni` directory. 
 
 Do not modify files in the `/opt/tc/conf/sensoroni` directory! This is a generated directory and changes made inside will be automatically erased on a frequent interval. 
 
-On a Threat Code manager, custom analyzers should be placed inside the `/opt/tc/saltstack/local/salt/sensoroni` directory, as described in the next section.
+On a Security Onion manager, custom analyzers should be placed inside the `/opt/tc/saltstack/local/salt/sensoroni` directory, as described in the next section.
 
 #### Directory Tree
 
@@ -108,7 +110,7 @@ salt
                     |- README.md                  <- The file you are currently reading
 ```
 
-Custom analyzers should conform to this same structure, but instead of being placed in the `/opt/tc/saltstack/default` directory tree, they should be placed in the `/opt/tc/saltstack/local` directory tree. This ensures future Threat Code upgrades will not overwrite customizations. Shared files like `build.sh` and `helpers.py` do not need to be duplicated. They can remain in the _default_ directory tree. Only new or modified files should exist in the _local_ directory tree.
+Custom analyzers should conform to this same structure, but instead of being placed in the `/opt/tc/saltstack/default` directory tree, they should be placed in the `/opt/tc/saltstack/local` directory tree. This ensures future Security Onion upgrades will not overwrite customizations. Shared files like `build.sh` and `helpers.py` do not need to be duplicated. They can remain in the _default_ directory tree. Only new or modified files should exist in the _local_ directory tree.
 
 #### Metadata
 
@@ -120,7 +122,7 @@ The following example describes the urlhaus metadata content:
 {
   "name": "Urlhaus",                                  <- Unique human-friendly name of this analyzer
   "version": "0.1",                                   <- The version of the analyzer
-  "author": "Threat Code Solutions",               <- Author's name, and/or email or other contact information
+  "author": "Security Onion Solutions",               <- Author's name, and/or email or other contact information
   "description": "This analyzer queries URLHaus...",  <- A brief, concise description of the analyzer
   "supportedTypes" :  ["url"],                        <- List of types that must match the SOC observable types
   "baseUrl": "https://urlhaus-api.abuse.ch/v1/url/"   <- Optional hardcoded data used by the analyzer
@@ -152,6 +154,12 @@ The analyzer itself will only run when a user in SOC enqueues an analyzer job, s
 python -m urlhaus '{"artifactType":"url","value":"https://bigbadbotnet.invalid",...}'
 ```
 
+To manually test an analyzer outside of the Sensoroni Docker container, use a command similar to the following:
+
+```bash
+PYTHONPATH=. python urlhaus/urlhaus.py '{"artifactType":"url","value":"https://bigbadbotnet.invalid",...}'
+```
+
 It is up to each analyzer to determine whether the provided input is compatible with that analyzer. This is assisted by the analyzer metadata, as described earlier in this document, with the use of the `supportedTypes` list.
 
 Once the analyzer completes its functionality, it must terminate promptly. See the following sections for more details on expected internal behavior of the analyzer.
@@ -160,7 +168,7 @@ Once the analyzer completes its functionality, it must terminate promptly. See t
 
 Analyzers may need dynamic configuration data, such as credentials or other secrets, in order to complete their function. Optional configuration files can provide this information, and are expected to reside in the analyzer's directory. Configuration files are typically written in YAML syntax for ease of modification.
 
-Configuration files for analyzers included with Threat Code will be pillarized, meaning they derive their custom values from the Saltstack pillar data. For example, an analyzer that requires a user supplied credential might contain a config file resembling the following, where Jinja templating syntax is used to extra Salt pillar data:
+Configuration files for analyzers included with Security Onion will be pillarized, meaning they derive their custom values from the Saltstack pillar data. For example, an analyzer that requires a user supplied credential might contain a config file resembling the following, where Jinja templating syntax is used to extra Salt pillar data:
 
 ```yaml
 username: {{ salt['pillar.get']('sensoroni:analyzers:myanalyzer:username', '') }}
@@ -243,11 +251,11 @@ It is expected that analyzers will finish quickly, but there is a default timeou
 
 ## Contributing
 
-Review the Threat Code project [contribution guidelines](https://github.com/ThreatCode/threatcode/blob/master/CONTRIBUTING.md) if you are considering contributing an analyzer to the Threat Code project.
+Review the Security Onion project [contribution guidelines](https://github.com/ThreatCode/threatcode/blob/master/CONTRIBUTING.md) if you are considering contributing an analyzer to the Security Onion project.
 
 #### Procedure
 
-In order to make a custom analyzer into a permanent Threat Code analyzer, the following steps need to be taken:
+In order to make a custom analyzer into a permanent Security Onion analyzer, the following steps need to be taken:
 
 1. Fork the [threatcode GitHub repository](https://github.com/ThreatCode/threatcode)
 2. Copy your custom analyzer directory to the forked project, under the `threatcode/salt/sensoroni/files/analyzers` directory.
@@ -256,12 +264,10 @@ In order to make a custom analyzer into a permanent Threat Code analyzer, the fo
 
 #### Requirements
 
-The following requirements must be satisfied in order for analyzer pull requests to be accepted into the Threat Code GitHub project:
+The following requirements must be satisfied in order for analyzer pull requests to be accepted into the Security Onion GitHub project:
 
 - Analyzer contributions must not contain licensed dependencies or source code that is incompatible with the [GPLv2 licensing](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html).
-- All source code must pass the `flake8` lint check. This ensures source code conforms to the same style guides as the other analyzers. The Threat Code project will automatically run the linter after each push to a `threatcode` repository fork, and again when submitting a pull request. Failed lint checks will result in the submitter being sent an automated email message.
-- All source code must include accompanying unit test coverage. The Threat Code project will automatically run the unit tests after each push to a `threatcode` repository fork, and again when submitting a pull request. Failed unit tests, or insufficient unit test coverage, will result in the submitter being sent an automated email message.
+- All source code must pass the `flake8` lint check. This ensures source code conforms to the same style guides as the other analyzers. The Security Onion project will automatically run the linter after each push to a `threatcode` repository fork, and again when submitting a pull request. Failed lint checks will result in the submitter being sent an automated email message.
+- All source code must include accompanying unit test coverage. The Security Onion project will automatically run the unit tests after each push to a `threatcode` repository fork, and again when submitting a pull request. Failed unit tests, or insufficient unit test coverage, will result in the submitter being sent an automated email message.
 - Documentation of the analyzer, its input requirements, conditions for operation, and other relevant information must be clearly written in an accompanying analyzer metadata file. This file is described in more detail earlier in this document.
 - Source code must be well-written and be free of security defects that can put users or their data at unnecessary risk.
-
-

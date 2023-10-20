@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.github.io/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
+. /usr/sbin/tc-common
+
+# Exit on errors, since all lines must succeed
+set -e
+
+# Check to see if we have extracted the ca cert.
+if [ ! -f /opt/tc/saltstack/local/salt/elasticsearch/cacerts ]; then
+    docker run -v /etc/pki/ca.crt:/etc/ssl/ca.crt --name tc-elasticsearchca --user root --entrypoint jdk/bin/keytool {{ GLOBALS.registry_host }}:5000/{{ GLOBALS.image_repo }}/so-elasticsearch:{{ GLOBALS.so_version }} -keystore /usr/share/elasticsearch/jdk/lib/security/cacerts -alias SOSCA -import -file /etc/ssl/ca.crt -storepass changeit -noprompt
+    docker cp tc-elasticsearchca:/usr/share/elasticsearch/jdk/lib/security/cacerts /opt/tc/saltstack/local/salt/elasticsearch/cacerts
+    docker cp tc-elasticsearchca:/etc/ssl/certs/ca-certificates.crt /opt/tc/saltstack/local/salt/elasticsearch/tls-ca-bundle.pem
+    docker rm tc-elasticsearchca
+    echo "" >> /opt/tc/saltstack/local/salt/elasticsearch/tls-ca-bundle.pem
+    echo "sosca" >> /opt/tc/saltstack/local/salt/elasticsearch/tls-ca-bundle.pem
+    cat /etc/pki/ca.crt >> /opt/tc/saltstack/local/salt/elasticsearch/tls-ca-bundle.pem
+else
+    exit 0
+fi

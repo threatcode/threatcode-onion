@@ -1,16 +1,21 @@
 #!/bin/bash
 #
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
 
 
 . /usr/sbin/tc-common
-. /usr/sbin/tc-image-common
+. /usr/sbin/so-image-common
 
 usage() {
 	read -r -d '' message <<- EOM
 		usage: tc-image-pull [-h] IMAGE [IMAGE ...]
 
 		positional arguments:
-			IMAGE         One or more 'tc-' prefixed images to download and verify.
+			IMAGE         One or more 'so-' prefixed images to download and verify.
 
 		optional arguments:
 			-h, --help    Show this help message and exit.

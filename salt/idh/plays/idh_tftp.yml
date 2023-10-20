@@ -1,8 +1,8 @@
-title: TC IDH - TFTP Requests
+title: SO IDH - TFTP Requests
 id: 6722bba8-5713-4463-b3ab-8432224928c2
 status: experimental
-description: Detects when the TFTP service on a TC IDH node has had requests.
-author: Threat Code Solutions
+description: Detects when the TFTP service on a SO IDH node has had requests.
+author: Security Onion Solutions
 license: MIT
 references: 
   - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration

@@ -1,8 +1,8 @@
-title: TC IDH - HTTP Accessed
+title: SO IDH - HTTP Accessed
 id: 34300b04-3350-4f4b-bf8c-9bfbfdc9914f
 status: experimental
-description: Detects when the HTTP service on a TC IDH node has had a Get request.
-author: Threat Code Solutions
+description: Detects when the HTTP service on a SO IDH node has had a Get request.
+author: Security Onion Solutions
 license: MIT
 references: 
   - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration

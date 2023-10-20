@@ -1,0 +1,71 @@
+#!/bin/bash
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
+. /usr/sbin/so-elastic-fleet-common
+
+RETURN_CODE=0
+
+if [ ! -f /opt/tc/state/eaintegrations.txt ]; then
+  # First, check for any package upgrades
+  /usr/sbin/so-elastic-fleet-package-upgrade
+
+  # Second, configure Elastic Defend Integration seperately
+  /usr/sbin/so-elastic-fleet-integration-policy-elastic-defend
+
+  # Initial Endpoints
+  for INTEGRATION in /opt/tc/conf/elastic-fleet/integrations/endpoints-initial/*.json
+  do
+    printf "\n\nInitial Endpoints Policy - Loading $INTEGRATION\n"
+    elastic_fleet_integration_check "endpoints-initial" "$INTEGRATION"
+    if [ -n "$INTEGRATION_ID" ]; then
+      printf "\n\nIntegration $NAME exists - Updating integration\n"
+      elastic_fleet_integration_update "$INTEGRATION_ID" "@$INTEGRATION"
+    else
+      printf "\n\nIntegration does not exist - Creating integration\n"
+      elastic_fleet_integration_create "@$INTEGRATION"
+    fi
+  done
+
+  # Grid Nodes - General
+  for INTEGRATION in /opt/tc/conf/elastic-fleet/integrations/grid-nodes_general/*.json
+  do
+    printf "\n\nGrid Nodes Policy_General - Loading $INTEGRATION\n"
+    elastic_fleet_integration_check "so-grid-nodes_general" "$INTEGRATION"
+    if [ -n "$INTEGRATION_ID" ]; then
+      printf "\n\nIntegration $NAME exists - Updating integration\n"
+      elastic_fleet_integration_update "$INTEGRATION_ID" "@$INTEGRATION"
+    else
+      printf "\n\nIntegration does not exist - Creating integration\n"
+      elastic_fleet_integration_create "@$INTEGRATION"
+    fi
+  done
+  if [[ "$RETURN_CODE" != "1" ]]; then
+    touch /opt/tc/state/eaintegrations.txt
+  fi
+
+  # Grid Nodes - Heavy
+  for INTEGRATION in /opt/tc/conf/elastic-fleet/integrations/grid-nodes_heavy/*.json
+  do
+    printf "\n\nGrid Nodes Policy_Heavy - Loading $INTEGRATION\n"
+    elastic_fleet_integration_check "so-grid-nodes_heavy" "$INTEGRATION"
+    if [ -n "$INTEGRATION_ID" ]; then
+      printf "\n\nIntegration $NAME exists - Updating integration\n"
+      elastic_fleet_integration_update "$INTEGRATION_ID" "@$INTEGRATION"
+    else
+      printf "\n\nIntegration does not exist - Creating integration\n"
+      if [ "$NAME" != "elasticsearch-logs" ]; then
+        elastic_fleet_integration_create "@$INTEGRATION"
+      fi
+    fi
+  done
+  if [[ "$RETURN_CODE" != "1" ]]; then
+    touch /opt/tc/state/eaintegrations.txt
+  fi
+else
+  exit $RETURN_CODE
+fi
+
+

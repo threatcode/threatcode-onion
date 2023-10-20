@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.github.io/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
+
+
+# Source common settings
+. /usr/sbin/tc-common
+
+# Check for log files
+for FILE in /opt/tc/log/elasticsearch/*.log /opt/tc/log/logstash/*.log /opt/tc/log/kibana/*.log /opt/tc/log/elastalert/*.log /opt/tc/log/curator/*.log /opt/tc/log/freqserver/*.log /opt/tc/log/nginx/*.log; do
+
+# If file exists, then look for errors or warnings 
+if [ -f $FILE ]; then
+	MESSAGE=`grep -i 'ERROR\|FAIL\|WARN' $FILE` 
+	if [ ! -z "$MESSAGE" ]; then
+		header $FILE
+		echo $MESSAGE | sed 's/WARN/\nWARN/g' | sed 's/WARNING/\nWARNING/g' | sed 's/ERROR/\nERROR/g' | sort | uniq -c | sort -nr
+		echo
+	fi
+fi
+done

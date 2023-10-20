@@ -1,5 +1,10 @@
 #!/bin/bash
 #
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
 
 . /usr/sbin/tc-common
 
@@ -10,7 +15,7 @@ SKIP=0
 usage()
 {
 cat <<EOF
-Threat Code NSM Data Deletion
+Security Onion NSM Data Deletion
   Options:
   -h         This message
   -y         Skip interactive mode

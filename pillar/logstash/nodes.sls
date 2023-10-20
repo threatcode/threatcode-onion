@@ -2,7 +2,7 @@
 {% set cached_grains = salt.saltutil.runner('cache.grains', tgt='*') %}
 {% for minionid, ip in salt.saltutil.runner(
     'mine.get',
-    tgt='G@role:tc-manager or G@role:tc-managersearch or G@role:tc-standalone or G@role:tc-node or G@role:tc-heavynode or G@role:tc-receiver or G@role:tc-helix',
+    tgt='G@role:so-manager or G@role:so-managersearch or G@role:so-standalone or G@role:so-searchnode or G@role:so-heavynode or G@role:so-receiver or G@role:so-fleet ',
     fun='network.ip_addrs',
     tgt_type='compound') | dictsort()
 %}

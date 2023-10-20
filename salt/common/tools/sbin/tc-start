@@ -1,8 +1,13 @@
 #!/bin/bash
 
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
 
 
-# Usage: tc-start  all | filebeat | kibana | playbook 
+
+# Usage: tc-start  all | kibana | playbook 
 
 . /usr/sbin/tc-common
 
@@ -19,8 +24,9 @@ if [ $# -ge 1 ]; then
 	case $1 in
    		"all") salt-call state.highstate queue=True;;
    		"steno") if docker ps | grep -q tc-$1; then printf "\n$1 is already running!\n\n"; else docker rm tc-$1 >/dev/null 2>&1 ; salt-call state.apply pcap queue=True; fi ;; 
-   		*) if docker ps | grep -E -q '^tc-$1$'; then printf "\n$1 is already running\n\n"; else docker rm tc-$1 >/dev/null 2>&1 ; salt-call state.apply $1 queue=True; fi ;; 
+   		"elastic-fleet") if docker ps | grep -q tc-$1; then printf "\n$1 is already running!\n\n"; else docker rm tc-$1 >/dev/null 2>&1 ; salt-call state.apply elasticfleet queue=True; fi ;; 
+   		*) if docker ps | grep -E -q '^so-$1$'; then printf "\n$1 is already running\n\n"; else docker rm tc-$1 >/dev/null 2>&1 ; salt-call state.apply $1 queue=True; fi ;; 
 	esac
 else
-	echo -e "\nPlease provide an argument by running like tc-start $component, or by using the component-specific script.\nEx. tc-start filebeat, or tc-filebeat-start\n"	
+	echo -e "\nPlease provide an argument by running like tc-start $component, or by using the component-specific script.\nEx. tc-start logstash, or tc-logstash-start\n"	
 fi

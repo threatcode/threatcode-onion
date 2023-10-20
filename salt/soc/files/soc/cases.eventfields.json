@@ -1,3 +1,0 @@
-{
-  "default": ["soc_timestamp", "tc_case.title", "tc_case.status", "tc_case.severity", "tc_case.assigneeId", "tc_case.createTime"]
-}

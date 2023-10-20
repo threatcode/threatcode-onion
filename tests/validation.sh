@@ -150,11 +150,11 @@ sleep 0.15
 
 header "hostname"
 
-test_fun 0 valid_hostname "tc-sensor01"
+test_fun 0 valid_hostname "so-sensor01"
 
 test_fun 0 valid_hostname "so"
 
-test_fun 1 valid_hostname "tc_sensor01"
+test_fun 1 valid_hostname "so_sensor01"
 
 test_fun 1 valid_hostname "so.sensor01"
 
@@ -188,7 +188,7 @@ sleep 0.15
 
 header "Linux user"
 
-test_fun 0 valid_username "tc_user_01"
+test_fun 0 valid_username "so_user_01"
 
 test_fun 0 valid_username "onionuser"
 

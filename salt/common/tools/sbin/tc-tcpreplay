@@ -1,7 +1,14 @@
 #!/bin/bash
 
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
+# Usage: tc-tcpreplay "/opt/samples/*"
+
 . /usr/sbin/tc-common
-. /usr/sbin/tc-image-common
+. /usr/sbin/so-image-common
 
 REPLAYIFACE=${REPLAYIFACE:-$(lookup_pillar interface sensor)}
 REPLAYSPEED=${REPLAYSPEED:-10}
@@ -9,7 +16,7 @@ REPLAYSPEED=${REPLAYSPEED:-10}
 mkdir -p /opt/tc/samples
 
 if [[ $# -lt 1 ]]; then
-	echo "Replays one or more PCAP sample files to the Threat Code monitoring interface."
+	echo "Replays one or more PCAP sample files to the Security Onion monitoring interface."
 	echo
 	echo "Usage: $0 <pcap-sample(s)>"
 	echo 
@@ -20,7 +27,7 @@ if [[ $# -lt 1 ]]; then
 	echo "Customer provided PCAP example:"
 	echo "  $0 /opt/tc/samples/some_event.pcap"
 	echo
-	echo "Threat Code-provided PCAP example:"
+	echo "Security Onion-provided PCAP example:"
 	echo "  $0 /opt/samples/4in6.pcap"
 
 	exit 1
@@ -34,18 +41,18 @@ if ! docker ps | grep -q tc-tcpreplay; then
   	set_version
   	if ! docker images | grep tc-tcpreplay | grep ":5000" | grep -q $VERSION ; then
   		echo "Pulling tc-tcpreplay image"
-		  TRUSTED_CONTAINERS=("tc-tcpreplay")
+		  TRUSTED_CONTAINERS=("so-tcpreplay")
 		  mkdir -p /opt/tc/log/tcpreplay
 		  update_docker_containers "tcpreplay" "" "" "/opt/tc/log/tcpreplay/init.log"
 		else
-			echo "tc-tcpreplay image exists."
+			echo "so-tcpreplay image exists."
 		fi
 	fi
 	if is_sensor_node; then
 		if ! is_manager_node; then
 			echo "Attempting to start replay container. If this fails then you may need to run this command on the manager first."
 		fi
-  	tc-tcpreplay-start || fail "Unable to initialize tcpreplay"
+  	so-tcpreplay-start || fail "Unable to initialize tcpreplay"
   fi
 fi
 
