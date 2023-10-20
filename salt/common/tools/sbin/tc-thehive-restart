@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+
+
+. /usr/sbin/tc-common
+
+echo "TheHive and its components are no longer part of Threat Code"

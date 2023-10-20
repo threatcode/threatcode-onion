@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+
+. /usr/sbin/tc-common
+
+ENABLEPLAY=${1:-False}
+
+docker exec tc-soctopus /usr/local/bin/python -c "import playbook; print(playbook.play_import($ENABLEPLAY))"

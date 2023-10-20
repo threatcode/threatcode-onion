@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+
+. /usr/sbin/tc-common
+
+SKIP=0
+#########################################
+# Options
+#########################################
+usage()
+{
+cat <<EOF
+Threat Code NSM Data Deletion
+  Options:
+  -h         This message
+  -y         Skip interactive mode
+EOF
+}
+while getopts "h:y" OPTION
+do
+        case $OPTION in
+                h)
+                        usage
+                        exit 0
+                        ;;
+                
+                y)
+                        SKIP=1
+                        ;;
+                *)
+                        usage
+                        exit 0
+                        ;;
+        esac
+done
+if [ $SKIP -ne 1 ]; then
+        # Inform user we are about to delete all data
+        echo
+        echo "This script will delete all NIDS data (PCAP, Suricata, Zeek)" 
+        echo "If you would like to proceed, please type "AGREE" and hit ENTER."
+        echo
+        # Read user input
+        read INPUT
+        if [ "$INPUT" != "AGREE" ] ; then exit 0; fi
+fi
+
+delete_pcap() {
+  PCAP_DATA="/nsm/pcap/"
+  [ -d $PCAP_DATA ] && tc-pcap-stop && rm -rf $PCAP_DATA/* && tc-pcap-start
+}
+delete_suricata() {
+  SURI_LOG="/opt/tc/log/suricata/eve.json"
+  [ -f $SURI_LOG ] && tc-suricata-stop && rm -f $SURI_LOG && tc-suricata-start
+}
+delete_zeek() {
+  ZEEK_LOG="/nsm/zeek/logs/"
+  [ -d $ZEEK_LOG ] && tc-zeek-stop && rm -rf $ZEEK_LOG/* && tc-zeek-start
+}
+
+delete_pcap
+delete_suricata
+delete_zeek
+

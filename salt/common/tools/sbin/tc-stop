@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+
+# Usage: tc-stop  filebeat | kibana | playbook | thehive
+
+. /usr/sbin/tc-common
+
+if [ $# -ge 1 ]; then
+	echo $banner
+	printf "Stopping $1...\n"
+	echo $banner
+
+	case $1 in
+    		*) docker stop tc-$1 ; docker rm tc-$1 ;;
+	esac
+else
+	echo -e "\nPlease provide an argument by running like tc-stop $component, or by using the component-specific script.\nEx. tc-stop filebeat, or tc-filebeat-stop\n"	
+fi
+

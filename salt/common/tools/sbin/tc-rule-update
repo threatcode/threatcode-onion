@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. /usr/sbin/tc-common
+
+argstr=""
+for arg in "$@"; do
+    argstr="${argstr} \"${arg}\""
+done
+
+docker exec tc-idstools /bin/bash -c "cd /opt/tc/idstools/etc && idstools-rulecat --force ${argstr}"

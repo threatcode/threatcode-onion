@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+
+. /usr/sbin/tc-common
+
+# Check to see if we are already running
+NUM_RUNNING=$(pgrep -cf "/bin/bash /usr/sbin/tc-playbook-sync")
+[ "$NUM_RUNNING" -gt 1 ] && echo "$(date) - $NUM_RUNNING Playbook sync processes running...exiting." && exit 0
+
+docker exec tc-soctopus python3 playbook_play-sync.py

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+
+
+. /usr/sbin/tc-common
+
+/usr/sbin/tc-restart tcpreplay $1
+

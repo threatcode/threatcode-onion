@@ -1,0 +1,5 @@
+#version cannot be used elsewhere in this pillar as tcup is grepping for it to determine if Salt needs to be patched
+# When updating the salt version, also update the version in threatcode-builds/images/itc-task/Dockerfile and saltify function in tc-functions
+salt:
+  master:
+    version: 3004.2

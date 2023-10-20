@@ -1,0 +1,71 @@
+[base]
+name=CentOS-$releasever - Base
+baseurl=https://repo.threatcode.net/file/threatcode-repo/base/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#released updates 
+[updates]
+name=CentOS-$releasever - Updates
+baseurl=https://repo.threatcode.net/file/threatcode-repo/updates/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#additional packages that may be useful
+[extras]
+name=CentOS-$releasever - Extras
+baseurl=https://repo.threatcode.net/file/threatcode-repo/extras/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#additional packages that extend functionality of existing packages
+[centosplus]
+name=CentOS-$releasever - Plus
+baseurl=https://repo.threatcode.net/file/threatcode-repo/centosplus/
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+[epel]
+name=Extra Packages for Enterprise Linux 7 - $basearch
+baseurl=https://repo.threatcode.net/file/threatcode-repo/epel/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+
+[docker-ce-stable]
+name=Docker CE Stable - $basearch
+baseurl=https://repo.threatcode.net/file/threatcode-repo/docker-ce-stable
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/docker.pub
+
+[saltstack]
+name=SaltStack repo for RHEL/CentOS $releasever PY3
+baseurl=https://repo.threatcode.net/file/threatcode-repo/salt/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/SALTSTACK-GPG-KEY.pub
+
+[wazuh_repo]
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/GPG-KEY-WAZUH
+enabled=1
+name=Wazuh repository
+baseurl=https://repo.threatcode.net/file/threatcode-repo/wazuh_repo/
+protect=1
+
+[wazuh4_repo]
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/GPG-KEY-WAZUH
+enabled=1
+name=Wazuh repository
+baseurl=https://repo.threatcode.net/file/threatcode-repo/wazuh4_repo/
+protect=1
+
+[threatcode]
+name=Threat Code Repo repo
+baseurl=https://repo.threatcode.net/file/threatcode-repo/threatcode/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.threatcode.net/file/threatcode-repo/keys/threatcode.pub

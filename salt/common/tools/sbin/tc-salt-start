@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+
+
+. /usr/sbin/tc-common
+
+echo $banner
+printf "Starting local Salt Minion...\n"
+echo $banner
+
+service salt-minion start
+service salt-minion status

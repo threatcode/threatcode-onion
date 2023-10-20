@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+
+
+. /usr/sbin/tc-common
+
+salt-call state.apply playbook.db_init,playbook,playbook.automation_user_create
+
+/usr/sbin/tc-soctopus-restart
+
+echo "Importing Plays - this will take some time...."
+sleep 5
+/usr/sbin/tc-playbook-ruleupdate

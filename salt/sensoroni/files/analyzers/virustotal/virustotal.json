@@ -1,0 +1,7 @@
+{
+  "name": "VirusTotal",
+  "version": "0.1",
+  "author": "Threat Code Solutions",
+  "description": "This analyzer queries VirusTotal to see if a string value is considered malicious.",
+  "supportedTypes" :  ["domain", "hash", "ip", "url"]
+}

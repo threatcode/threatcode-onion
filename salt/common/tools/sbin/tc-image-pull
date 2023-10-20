@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+
+
+. /usr/sbin/tc-common
+. /usr/sbin/tc-image-common
+
+usage() {
+	read -r -d '' message <<- EOM
+		usage: tc-image-pull [-h] IMAGE [IMAGE ...]
+
+		positional arguments:
+			IMAGE         One or more 'tc-' prefixed images to download and verify.
+
+		optional arguments:
+			-h, --help    Show this help message and exit.
+	EOM
+	echo "$message"
+	exit 1
+}
+
+for arg; do
+	shift
+	[[ "$arg" = "--quiet" || "$arg" = "-q" ]] && quiet=true && continue
+	set -- "$@" "$arg"
+done
+
+if [[ $# -eq 0 || $# -gt 1 ]] || [[ $1 == '-h' || $1 == '--help' ]]; then
+	usage
+fi
+
+TRUSTED_CONTAINERS=("$@")
+set_version
+
+for image in "${TRUSTED_CONTAINERS[@]}"; do
+	if ! docker images | grep "$image" | grep ":5000" | grep -q "$VERSION"; then
+		if [[ $quiet == true ]]; then
+			update_docker_containers "$image" "" "" "/dev/null"
+		else
+			update_docker_containers "$image" "" "" "" 
+		fi
+	else
+		echo "$image:$VERSION image exists."
+	fi
+done

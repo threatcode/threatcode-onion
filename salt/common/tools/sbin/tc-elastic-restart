@@ -1,0 +1,30 @@
+#!/bin/bash
+
+
+
+. /usr/sbin/tc-common
+
+
+{%- if grains['role'] in ['tc-eval','tc-manager', 'tc-managersearch', 'tc-standalone', 'tc-heavynode', 'tc-node', 'tc-import']%}
+/usr/sbin/tc-restart elasticsearch $1
+{%- endif %}
+
+{%- if grains['role'] in ['tc-eval', 'tc-manager', 'tc-managersearch', 'tc-standalone', 'tc-import']%}
+/usr/sbin/tc-restart kibana $1
+{%- endif %}
+
+{%- if grains['role'] in ['tc-manager', 'tc-managersearch', 'tc-standalone', 'tc-heavynode', 'tc-node']%}
+/usr/sbin/tc-restart logstash $1
+{%- endif %}
+
+{%- if grains['role'] in ['tc-manager', 'tc-managersearch', 'tc-standalone', 'tc-heavynode', 'tc-node', 'tc-sensor']%}
+/usr/sbin/tc-restart filebeat $1
+{%- endif %}
+
+{%- if grains['role'] in ['tc-manager', 'tc-managersearch', 'tc-standalone', 'tc-heavynode', 'tc-node']%}
+/usr/sbin/tc-restart curator $1
+{%- endif %}
+
+{%- if grains['role'] in ['tc-eval','tc-manager', 'tc-managersearch', 'tc-standalone']%}
+/usr/sbin/tc-restart elastalert $1
+{%- endif %}

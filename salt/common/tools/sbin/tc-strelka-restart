@@ -1,0 +1,13 @@
+#!/bin/bash
+
+
+
+. /usr/sbin/tc-common
+
+/usr/sbin/tc-stop strelka-filestream $1
+/usr/sbin/tc-stop strelka-manager $1
+/usr/sbin/tc-stop strelka-frontend $1
+/usr/sbin/tc-stop strelka-backend $1
+/usr/sbin/tc-stop strelka-gatekeeper $1
+/usr/sbin/tc-stop strelka-coordinator $1
+/usr/sbin/tc-start strelka $1

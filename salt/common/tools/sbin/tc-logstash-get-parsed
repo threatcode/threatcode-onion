@@ -1,0 +1,7 @@
+#!/bin/bash
+
+
+
+. /usr/sbin/tc-common
+
+docker exec -it tc-redis redis-cli llen logstash:unparsed

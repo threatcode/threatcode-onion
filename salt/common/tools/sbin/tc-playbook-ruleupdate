@@ -1,0 +1,7 @@
+#!/bin/bash
+
+
+
+. /usr/sbin/tc-common
+
+docker exec tc-soctopus python3 playbook_bulk-update.py

@@ -1,0 +1,54 @@
+#!/bin/bash
+
+
+
+if [ -f "/usr/sbin/tc-common" ]; then
+  . /usr/sbin/tc-common
+fi
+
+ES_AUTH_PILLAR=${ELASTIC_AUTH_PILLAR:-/opt/tc/saltstack/local/pillar/elasticsearch/auth.sls}
+ES_USERS_FILE=${ELASTIC_USERS_FILE:-/opt/tc/saltstack/local/salt/elasticsearch/files/users}
+
+authEnable=$1
+
+if ! grep -q "enabled: " "$ES_AUTH_PILLAR"; then
+  echo "Elastic auth pillar file is invalid. Unable to proceed."
+  exit 1
+fi
+
+function restart() {
+  if [[ -z "$ELASTIC_AUTH_SKIP_HIGHSTATE" ]]; then
+    echo "Elasticsearch on all affected minions will now be stopped and then restarted..."
+    salt -C 'G@role:tc-standalone or G@role:tc-eval or G@role:tc-import or G@role:tc-manager or G@role:tc-managersearch or G@role:tc-node or G@role:tc-heavynode' cmd.run tc-elastic-stop queue=True
+    echo "Applying highstate to all affected minions..."
+    salt -C 'G@role:tc-standalone or G@role:tc-eval or G@role:tc-import or G@role:tc-manager or G@role:tc-managersearch or G@role:tc-node or G@role:tc-heavynode' state.highstate queue=True
+  fi
+}
+
+if [[ "$authEnable" == "true" ]]; then
+  if grep -q "enabled: False" "$ES_AUTH_PILLAR"; then
+    sed -i 's/enabled: False/enabled: True/g' "$ES_AUTH_PILLAR"
+    restart
+    echo "Elastic auth is now enabled."
+    if grep -q "argon" "$ES_USERS_FILE"; then
+      echo ""
+      echo "IMPORTANT: The following users will need to change their password, after logging into SOC, in order to access Kibana:"
+      grep argon "$ES_USERS_FILE" | cut -d ":" -f 1
+    fi
+  else
+    echo "Auth is already enabled."
+  fi
+elif [[ "$authEnable" == "false" ]]; then
+  if grep -q "enabled: True" "$ES_AUTH_PILLAR"; then
+    sed -i 's/enabled: True/enabled: False/g' "$ES_AUTH_PILLAR"
+    restart
+    echo "Elastic auth is now disabled."
+  else
+    echo "Auth is already disabled."
+  fi
+else
+  echo "Usage: $0 <true|false>"
+  echo ""
+  echo "Toggles Elastic authentication. Elasticsearch will be restarted on each affected minion."
+  echo ""
+fi

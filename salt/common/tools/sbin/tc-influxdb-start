@@ -1,0 +1,7 @@
+#!/bin/bash
+
+
+
+. /usr/sbin/tc-common
+
+/usr/sbin/tc-start influxdb $1

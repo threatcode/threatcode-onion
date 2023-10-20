@@ -1,0 +1,4216 @@
+elasticsearch:
+  config:
+    node:
+      name: {{ grains.host }}
+      attr:
+        box_type: hot
+    cluster:
+      name: {{ grains.host }}
+      routing:
+        allocation:
+          disk:
+            threshold_enabled: true
+            watermark:
+              low: 95%
+              high: 98%
+              flood_stage: 98%
+    network:
+      host: 0.0.0.0
+    path:
+      logs: /var/log/elasticsearch
+    action:
+      destructive_requires_name: true
+    transport:
+      bind_host: 0.0.0.0
+      publish_host: {{ grains.host }}
+      publish_port: 9300
+    xpack:
+      ml:
+        enabled: false
+      security:
+        enabled: true
+        authc:
+          anonymous:
+            authz_exception: true
+            roles: []
+            username: _anonymous
+        transport:
+          ssl:
+            enabled: true
+            verification_mode: none
+            key: /usr/share/elasticsearch/config/elasticsearch.key
+            certificate: /usr/share/elasticsearch/config/elasticsearch.crt
+            certificate_authorities:
+              - /usr/share/elasticsearch/config/ca.crt
+        http:
+          ssl:
+            enabled: true
+            client_authentication: none
+            key: /usr/share/elasticsearch/config/elasticsearch.key
+            certificate: /usr/share/elasticsearch/config/elasticsearch.crt
+            certificate_authorities: 
+              - /usr/share/elasticsearch/config/ca.crt
+    script:
+      max_compilations_rate: 20000/1m
+    indices:
+      id_field_data:
+        enabled: false
+    ingest:
+      geoip:
+        downloader:
+          enabled: false
+    logger:
+      org:
+        elasticsearch:
+          deprecation: ERROR
+  index_settings:
+    tc-aws:
+      warm: 7
+      close: 30
+      delete: 365
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-aws-*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - aws-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-azure:
+      warm: 7
+      close: 30
+      delete: 365
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-azure-*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - azure-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-barracuda:
+      warm: 7
+      close: 30
+      delete: 365
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-barracuda-*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-beats:
+      warm: 7
+      close: 30
+      delete: 365
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-beats-*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+          - winlog-mappings
+          - dtc-winlog-mappings
+        priority: 500
+    tc-bluecoat:
+      warm: 7
+      close: 30
+      delete: 365
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-bluecoat-*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-case:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-case*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 1500
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - case-mappings
+          - case-settings
+        priority: 500
+    tc-cef:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-cef*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - cef-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-checkpoint:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-checkpoint*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - checkpoint-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-cisco:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-cisco*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - cisco-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-common:
+      warm: 7
+      close: 30
+      delete: 365
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - syslog-mappings
+          - dtc-syslog-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+          - winlog-mappings
+        priority: 1
+    tc-cyberark:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-cyberark*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - cyberark-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-cylance:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-cylance*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-elasticsearch:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-elasticsearch*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - elasticsearch-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-endgame:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - endgame*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - endgame-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+          - winlog-mappings
+        priority: 500
+    tc-f5:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-f5*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-firewall:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-firewall*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - syslog-mappings
+          - dtc-syslog-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-flow:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-flow*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-fortinet:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-fortinet*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - fortinet-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-gcp:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-gcp*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - gcp-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-google_workspace:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-google_workspace*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - google_workspace-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-idh:
+      warm: 7
+      close: 30
+      delete: 365
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-idh-*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - container-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-ids:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-ids*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - suricata-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-imperva:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-imperva*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-import:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-import*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+          - winlog-mappings
+        priority: 500
+    tc-infoblox:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-infoblox*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+          - winlog-mappings
+        priority: 500
+    tc-juniper:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-juniper*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - juniper-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-kibana:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-kibana*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - kibana-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-kratos:
+      warm: 7
+      close: 30
+      delete: 365
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-kratos-*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - container-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-logstash:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-logstash*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - logstash-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-microsoft:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-microsoft*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - microsoft-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-misp:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-misp*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - misp-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-netflow:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-netflow*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - netflow-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-netscout:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-netscout*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-o365:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-o365*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - o365-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-okta:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-okta*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - okta-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-osquery:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-osquery*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+          - winlog-mappings
+        priority: 500
+    tc-ossec:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-ossec*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+          - winlog-mappings
+        priority: 500
+    tc-proofpoint:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-proofpoint*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-radware:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-radware*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-redis:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-redis*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - redis-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-snort:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-snort*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-snyk:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-snyk*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - snyk-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-sonicwall:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-sonicwall*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-sophos:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-sophos*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - sophos-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-squid:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-squid*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-strelka:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-strelka*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - tc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - tc-scan-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-syslog:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-syslog*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - syslog-mappings
+          - dtc-syslog-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-tomcat:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-tomcat*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-zeek:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-zeek*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 2
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - syslog-mappings
+          - dtc-syslog-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - zeek-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
+    tc-zscaler:
+      index_sorting: False
+      index_template:
+        index_patterns:
+          - tc-zscaler*
+        template:
+          mappings:
+            dynamic_templates:
+              - strings_as_keyword:
+                  mapping:
+                    ignore_above: 1024
+                    type: keyword
+                  match_mapping_type: string
+            date_detection: false
+          settings:
+            index:
+              mapping:
+                total_fields:
+                  limit: 5000
+              sort:
+                field: "@timestamp"
+                order: desc
+              refresh_interval: 30s
+              number_of_shards: 1
+              number_of_replicas: 0
+        composed_of: 
+          - agent-mappings
+          - dtc-agent-mappings
+          - base-mappings
+          - dtc-base-mappings
+          - client-mappings
+          - dtc-client-mappings
+          - cloud-mappings
+          - container-mappings
+          - data_stream-mappings
+          - destination-mappings
+          - dtc-destination-mappings
+          - pb-override-destination-mappings
+          - dll-mappings
+          - dns-mappings
+          - dtc-dns-mappings
+          - ecs-mappings
+          - dtc-ecs-mappings
+          - error-mappings
+          - event-mappings
+          - dtc-event-mappings
+          - file-mappings
+          - dtc-file-mappings
+          - group-mappings
+          - host-mappings
+          - dtc-host-mappings
+          - http-mappings
+          - dtc-http-mappings
+          - log-mappings
+          - network-mappings
+          - dtc-network-mappings
+          - observer-mappings
+          - dtc-observer-mappings
+          - orchestrator-mappings
+          - organization-mappings
+          - package-mappings
+          - process-mappings
+          - dtc-process-mappings
+          - registry-mappings
+          - related-mappings
+          - rule-mappings
+          - dtc-rule-mappings
+          - server-mappings
+          - service-mappings
+          - dtc-service-mappings
+          - source-mappings
+          - dtc-source-mappings
+          - pb-override-source-mappings
+          - threat-mappings
+          - tls-mappings
+          - tracing-mappings
+          - url-mappings
+          - user_agent-mappings
+          - dtc-user_agent-mappings
+          - vulnerability-mappings
+          - common-settings
+          - common-dynamic-mappings
+        priority: 500
