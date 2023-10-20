@@ -20,7 +20,7 @@ export random_uid
 node_es_port=9200
 export node_es_port
 
-setup_log="/root/sosetup.log"
+setup_log="/root/tcsetup.log"
 export setup_log
 
 error_log="/root/errors.log"

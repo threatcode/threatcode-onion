@@ -2463,7 +2463,7 @@ set_main_ip() {
 			echo "ERROR: Could not determine MAINIP or MNIC_IP." >> "$setup_log" 2>&1
 			echo "MAINIP=$MAINIP" >> "$setup_log" 2>&1
 			echo "MNIC_IP=$MNIC_IP" >> "$setup_log" 2>&1
-			whiptail_error_message "The management IP could not be determined. Please check the log at /root/sosetup.log and verify the network configuration. Press OK to exit."
+			whiptail_error_message "The management IP could not be determined. Please check the log at /root/tcsetup.log and verify the network configuration. Press OK to exit."
 			exit 1
 		fi
 		sleep 1
