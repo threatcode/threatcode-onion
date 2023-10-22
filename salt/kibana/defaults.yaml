@@ -1,14 +1,12 @@
 kibana:
-  enabled: True
+  enabled: False
   config:
     server:
       name: kibana
       host: "0.0.0.0"
       basePath: /kibana
-      publicBaseUrl: https://{{salt['pillar.get']('global:url_base')}}/kibana
+      rewriteBasePath: false
     elasticsearch:
-      hosts:
-        - https://{{salt['pillar.get']('manager:mainip')}}:9200
       ssl:
         verificationMode: none
       requestTimeout: 90000
@@ -33,3 +31,5 @@ kibana:
       reporting:
         kibanaServer:
           hostname: localhost
+      fleet:
+        registryUrl: ""

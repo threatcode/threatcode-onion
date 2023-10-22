@@ -6,13 +6,12 @@
   {% set UPPERCASE = "QWERTYUIOPASDFGHJKLZXCVBNM" %}
   {% set SYMBOLS = "~!@#^&*()-_=+[]|;:,.<>?" %}
   {% set CHARS = DIGITS~LOWERCASE~UPPERCASE~SYMBOLS %}
-  {% set tc_elastic_user_pass = salt['pillar.get']('elasticsearch:auth:users:tc_elastic_user:pass', salt['random.get_str'](72, chars=CHARS)) %}
-  {% set tc_kibana_user_pass = salt['pillar.get']('elasticsearch:auth:users:tc_kibana_user:pass', salt['random.get_str'](72, chars=CHARS)) %}
-  {% set tc_logstash_user_pass = salt['pillar.get']('elasticsearch:auth:users:tc_logstash_user:pass', salt['random.get_str'](72, chars=CHARS)) %}
-  {% set tc_beats_user_pass = salt['pillar.get']('elasticsearch:auth:users:tc_beats_user:pass', salt['random.get_str'](72, chars=CHARS)) %}
-  {% set tc_monitor_user_pass = salt['pillar.get']('elasticsearch:auth:users:tc_monitor_user:pass', salt['random.get_str'](72, chars=CHARS)) %}
-  {% set auth_enabled = salt['pillar.get']('elasticsearch:auth:enabled', False) %}
-
+  {% set so_elastic_user_pass = salt['pillar.get']('elasticsearch:auth:users:so_elastic_user:pass', salt['random.get_str'](72, chars=CHARS)) %}
+  {% set so_kibana_user_pass = salt['pillar.get']('elasticsearch:auth:users:so_kibana_user:pass', salt['random.get_str'](72, chars=CHARS)) %}
+  {% set so_logstash_user_pass = salt['pillar.get']('elasticsearch:auth:users:so_logstash_user:pass', salt['random.get_str'](72, chars=CHARS)) %}
+  {% set so_beats_user_pass = salt['pillar.get']('elasticsearch:auth:users:so_beats_user:pass', salt['random.get_str'](72, chars=CHARS)) %}
+  {% set so_monitor_user_pass = salt['pillar.get']('elasticsearch:auth:users:so_monitor_user:pass', salt['random.get_str'](72, chars=CHARS)) %}
+  
 elastic_auth_pillar:
   file.managed:
     - name: /opt/tc/saltstack/local/pillar/elasticsearch/auth.sls
@@ -21,23 +20,22 @@ elastic_auth_pillar:
     - contents: |
         elasticsearch:
           auth:
-            enabled: {{ auth_enabled }}
             users:
-              tc_elastic_user:
-                user: tc_elastic
-                pass: "{{ tc_elastic_user_pass }}"
-              tc_kibana_user:
-                user: tc_kibana
-                pass: "{{ tc_kibana_user_pass }}"
-              tc_logstash_user:
-                user: tc_logstash
-                pass: "{{ tc_logstash_user_pass }}"
-              tc_beats_user:
-                user: tc_beats
-                pass: "{{ tc_beats_user_pass }}"
-              tc_monitor_user:
-                user: tc_monitor
-                pass: "{{ tc_monitor_user_pass }}"
+              so_elastic_user:
+                user: so_elastic
+                pass: "{{ so_elastic_user_pass }}"
+              so_kibana_user:
+                user: so_kibana
+                pass: "{{ so_kibana_user_pass }}"
+              so_logstash_user:
+                user: so_logstash
+                pass: "{{ so_logstash_user_pass }}"
+              so_beats_user:
+                user: so_beats
+                pass: "{{ so_beats_user_pass }}"
+              so_monitor_user:
+                user: so_monitor
+                pass: "{{ so_monitor_user_pass }}"
     - show_changes: False
 {% else %}
 

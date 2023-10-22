@@ -1,2 +1,0 @@
-#!/bin/bash
-tc-user disable $*

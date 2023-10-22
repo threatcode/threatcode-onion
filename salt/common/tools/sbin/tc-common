@@ -1,13 +1,34 @@
 #!/bin/bash
 #
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
 
+# Elastic agent is not managed by salt. Because of this we must store this base information in a 
+# script that accompanies the soup system. Since tc-common is one of those special soup files, 
+# and since this same logic is required during installation, it's included in this file.
+ELASTIC_AGENT_TARBALL_VERSION="8.8.2"
+ELASTIC_AGENT_URL="https://repo.threatcode.net/file/so-repo/prod/2.4/elasticagent/elastic-agent_SO-$ELASTIC_AGENT_TARBALL_VERSION.tar.gz"
+ELASTIC_AGENT_MD5_URL="https://repo.threatcode.net/file/so-repo/prod/2.4/elasticagent/elastic-agent_SO-$ELASTIC_AGENT_TARBALL_VERSION.md5"
+ELASTIC_AGENT_FILE="/nsm/elastic-fleet/artifacts/elastic-agent_SO-$ELASTIC_AGENT_TARBALL_VERSION.tar.gz"
+ELASTIC_AGENT_MD5="/nsm/elastic-fleet/artifacts/elastic-agent_SO-$ELASTIC_AGENT_TARBALL_VERSION.md5"
+ELASTIC_AGENT_EXPANSION_DIR=/nsm/elastic-fleet/artifacts/beats/elastic-agent
 
 DEFAULT_SALT_DIR=/opt/tc/saltstack/default
+DOC_BASE_URL="https://threatcode.github.io/docs/en/2.4"
 
-# Check for prerequisites
-if [ "$(id -u)" -ne 0 ]; then
-	echo "This script must be run using sudo!"
-	exit 1
+if [ -z $NOROOT ]; then
+	# Check for prerequisites
+	if [ "$(id -u)" -ne 0 ]; then
+		echo "This script must be run using sudo!"
+		exit 1
+	fi
+fi
+
+# Ensure /usr/sbin is in path
+if ! echo "$PATH" | grep -q "/usr/sbin"; then
+  export PATH="$PATH:/usr/sbin"
 fi
 
 # Define a banner to separate sections
@@ -43,33 +64,37 @@ add_interface_bond0() {
 			ethtool -K "$BNIC" $i off &>/dev/null
 		fi
 	done
-	# Check if the bond slave connection has already been created
-	nmcli -f name,uuid -p con | grep -q "bond0-slave-$BNIC"
-	local found_int=$?
 
-	if [[ $found_int != 0 ]]; then
-		# Create the slave interface and assign it to the bond
-		nmcli con add type ethernet ifname "$BNIC" con-name "bond0-slave-$BNIC" master bond0 -- \
-			ethernet.mtu "$MTU" \
-			connection.autoconnect "yes"
-	else
-		local int_uuid
-		int_uuid=$(nmcli -f name,uuid -p con | sed -n "s/bond0-slave-$BNIC //p" | tr -d ' ')
+        if ! [[ $is_cloud ]]; then
+	  # Check if the bond slave connection has already been created
+	  nmcli -f name,uuid -p con | grep -q "bond0-slave-$BNIC"
+	  local found_int=$?
 
-		nmcli con mod "$int_uuid" \
-			ethernet.mtu "$MTU" \
-			connection.autoconnect "yes"
-	fi
+	  if [[ $found_int != 0 ]]; then
+		  # Create the slave interface and assign it to the bond
+		  nmcli con add type ethernet ifname "$BNIC" con-name "bond0-slave-$BNIC" master bond0 -- \
+			  ethernet.mtu "$MTU" \
+			  connection.autoconnect "yes"
+	  else
+		  local int_uuid
+		  int_uuid=$(nmcli -f name,uuid -p con | sed -n "s/bond0-slave-$BNIC //p" | tr -d ' ')
+
+		  nmcli con mod "$int_uuid" \
+			  ethernet.mtu "$MTU" \
+			  connection.autoconnect "yes"
+	  fi
+        fi
 
 	ip link set dev "$BNIC" arp off multicast off allmulticast off promisc on
-			
-	# Bring the slave interface up
-	if [[ $verbose == true ]]; then
-		nmcli con up "bond0-slave-$BNIC"
-	else
-		nmcli con up "bond0-slave-$BNIC" &>/dev/null
+
+        if ! [[ $is_cloud ]]; then
+	  # Bring the slave interface up
+	  if [[ $verbose == true ]]; then
+		  nmcli con up "bond0-slave-$BNIC"
+	  else
+		  nmcli con up "bond0-slave-$BNIC" &>/dev/null
+	  fi
 	fi
-	 
 	if [ "$nic_error" != 0 ]; then
 		return "$nic_error"
 	fi
@@ -129,13 +154,11 @@ check_salt_minion_status() {
 	return $status
 }
 
-
-
 copy_new_files() {
   # Copy new files over to the salt dir
   cd $UPDATE_DIR
-  rsync -a salt $DEFAULT_SALT_DIR/
-  rsync -a pillar $DEFAULT_SALT_DIR/
+  rsync -a salt $DEFAULT_SALT_DIR/ --delete
+  rsync -a pillar $DEFAULT_SALT_DIR/ --delete
   chown -R socore:socore $DEFAULT_SALT_DIR/
   chmod 755 $DEFAULT_SALT_DIR/pillar/firewall/addfirewall.sh
   cd /tmp
@@ -145,19 +168,44 @@ disable_fastestmirror() {
 	sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
 }
 
+download_and_verify() {
+	source_url=$1
+	source_md5_url=$2
+	dest_file=$3
+	md5_file=$4
+	expand_dir=$5
+
+	if [[ -n "$expand_dir" ]]; then
+		mkdir -p "$expand_dir"
+	fi
+
+	if ! verify_md5_checksum "$dest_file" "$md5_file"; then
+		retry 15 10 "curl --fail --retry 5 --retry-delay 15 -L '$source_url' --output '$dest_file'" "" ""
+		retry 15 10 "curl --fail --retry 5 --retry-delay 15 -L '$source_md5_url' --output '$md5_file'"  "" ""
+
+		if verify_md5_checksum "$dest_file" "$md5_file"; then
+		  echo "Source file and checksum are good."
+		else
+		  echo "Unable to download and verify the source file and checksum."
+		  return 1
+		fi
+	fi
+
+	if [[ -n "$expand_dir" ]]; then
+		tar -xf "$dest_file" -C "$expand_dir"
+	fi
+}
+
 elastic_license() {
 
 read -r -d '' message <<- EOM
 \n
-Starting in Elastic Stack version 7.11, the Elastic Stack binaries are only available under the Elastic License:
-https://threatcode.net/elastic-license
+Elastic Stack binaries and Security Onion components are only available under the Elastic License version 2 (ELv2):
+https://threatcode.net/license/
 
-Please review the Elastic License:
-https://www.elastic.co/licensing/elastic-license
+Do you agree to the terms of ELv2?
 
-Do you agree to the terms of the Elastic License?
-
-If so, type AGREE to accept the Elastic License and continue.  Otherwise, press Enter to exit this program without making any changes.
+If so, type AGREE to accept ELv2 and continue. Otherwise, press Enter to exit this program without making any changes.
 EOM
 
 	AGREED=$(whiptail --title "$whiptail_title" --inputbox \
@@ -167,7 +215,7 @@ EOM
 		mkdir -p /opt/tc/state
 		touch /opt/tc/state/yeselastic.txt 
 	else
-		echo "Starting in 2.3.40 you must accept the Elastic license if you want to run Threat Code."
+		echo "Starting in 2.3.40 you must accept the Elastic license if you want to run Security Onion."
 		exit 1
 	fi
 
@@ -186,19 +234,20 @@ get_random_value() {
 }
 
 gpg_rpm_import() {
-	if [[ "$OS" == "centos" ]]; then
+	if [[ $is_oracle ]]; then
 	    if [[ "$WHATWOULDYOUSAYYAHDOHERE" == "setup" ]]; then
-	        local RPMKEYSLOC="../salt/repo/client/files/centos/keys"
+	        local RPMKEYSLOC="../salt/repo/client/files/$OS/keys"
 	    else
-	        local RPMKEYSLOC="$UPDATE_DIR/salt/repo/client/files/centos/keys"
+	        local RPMKEYSLOC="$UPDATE_DIR/salt/repo/client/files/$OS/keys"
 	    fi
-	
-	    RPMKEYS=('RPM-GPG-KEY-EPEL-7' 'GPG-KEY-WAZUH' 'docker.pub' 'SALTSTACK-GPG-KEY.pub' 'threatcode.pub')
-
-	    for RPMKEY in "${RPMKEYS[@]}"; do
+		RPMKEYS=('RPM-GPG-KEY-oracle' 'RPM-GPG-KEY-EPEL-9' 'SALT-PROJECT-GPG-PUBKEY-2023.pub' 'docker.pub' 'threatcode.pub')
+		for RPMKEY in "${RPMKEYS[@]}"; do
     	        rpm --import $RPMKEYSLOC/$RPMKEY
 	        echo "Imported $RPMKEY"
 	    done
+	elif [[ $is_rpm ]]; then
+		echo "Importing the security onion GPG key"
+		rpm --import ../salt/repo/client/files/oracle/keys/threatcode.pub
 	fi
 }
 
@@ -211,12 +260,15 @@ init_monitor() {
 	
 	if [[ $MONITORNIC == "bond0" ]]; then 
 	  BIFACES=$(lookup_bond_interfaces)
+	  for i in rx tx sg tso ufo gso gro lro rx-vlan-offload tx-vlan-offload generic-receive-offload generic-segmentation-offload tcp-segmentation-offload; do
+	    ethtool -K "$MONITORNIC" "$i" off;
+  	  done
 	else
 	  BIFACES=$MONITORNIC
 	fi
 
 	for DEVICE_IFACE in $BIFACES; do
-	  for i in rx tx sg tso ufo gso gro lro; do
+	  for i in rx tx sg tso ufo gso gro lro rx-vlan-offload tx-vlan-offload generic-receive-offload generic-segmentation-offload tcp-segmentation-offload; do
 	    ethtool -K "$DEVICE_IFACE" "$i" off;
   	  done
 	  ip link set dev "$DEVICE_IFACE" arp off multicast off allmulticast off promisc on
@@ -224,31 +276,17 @@ init_monitor() {
 }
 
 is_manager_node() {
-	# Check to see if this is a manager node
-	role=$(lookup_role)
-	is_single_node_grid && return 0
-	[ $role == 'manager' ] && return 0
-	[ $role == 'managersearch' ] && return 0
-	[ $role == 'helix' ] && return 0
-	return 1
+	grep "role: tc-" /etc/salt/grains | grep -E "manager|eval|managersearch|standalone|import" &> /dev/null
 }
 
 is_sensor_node() {
 	# Check to see if this is a sensor (forward) node
-	role=$(lookup_role)
 	is_single_node_grid && return 0
-	[ $role == 'sensor' ] && return 0
-	[ $role == 'heavynode' ] && return 0
-	[ $role == 'helix' ] && return 0
-	return 1
+	grep "role: tc-" /etc/salt/grains | grep -E "sensor|heavynode" &> /dev/null
 }
 
 is_single_node_grid() {
-	role=$(lookup_role)
-	[ $role == 'eval' ] && return 0
-	[ $role == 'standalone' ] && return 0
-	[ $role == 'import' ] && return 0
-	return 1
+	grep "role: tc-" /etc/salt/grains | grep -E "eval|standalone|import" &> /dev/null
 }
 
 lookup_bond_interfaces() {
@@ -300,6 +338,17 @@ lookup_role() {
 	id=$(lookup_grain id)
 	pieces=($(echo $id | tr '_' ' '))
 	echo ${pieces[1]}
+}
+
+is_feature_enabled() {
+	feature=$1
+	enabled=$(lookup_salt_value features)
+	for cur in $enabled; do
+		if [[ "$feature" == "$cur" ]]; then
+			return 0
+		fi
+	done
+	return 1
 }
 
 require_manager() {
@@ -379,19 +428,32 @@ run_check_net_err() {
 	fi
 }
 
-set_cron_service_name() {
-  if [[ "$OS" == "centos" ]]; then
-    cron_service_name="crond"
-  else
-    cron_service_name="cron"
-  fi
+salt_minion_count() {
+	local MINIONDIR="/opt/tc/saltstack/local/pillar/minions"
+	MINIONCOUNT=$(ls -la $MINIONDIR/*.sls | grep -v adv_ | wc -l)
+
 }
 
 set_os() {
 	if [ -f /etc/redhat-release ]; then
-		OS=centos
+		if grep -q "Rocky Linux release 9" /etc/redhat-release; then
+			OS=rocky
+			OSVER=9
+			is_rocky=true
+		elif grep -q "CentOS Stream release 9" /etc/redhat-release; then
+			OS=centos
+			OSVER=9
+			is_centos=true
+		elif grep -q "Oracle Linux Server release 9" /etc/system-release; then
+			OS=oel
+			OSVER=9
+			is_oracle=true
+		fi
+		cron_service_name="crond"
 	else
 		OS=ubuntu
+		is_ubuntu=true
+		cron_service_name="cron"
 	fi
 }
 
@@ -400,7 +462,7 @@ set_minionid() {
 }
 
 set_palette() {
-	if [ "$OS" == ubuntu ]; then
+	if [[ $is_deb ]]; then
 	    update-alternatives --set newt-palette /etc/newt/palette.original
     fi
 }
@@ -413,7 +475,7 @@ set_version() {
 	if [ -z "$VERSION" ]; then
 		if [ -z "$NEWVERSION" ]; then
 			if [ "$CURRENTVERSION" == "0.0.0" ]; then
-				echo "ERROR: Unable to detect Threat Code version; terminating script."
+				echo "ERROR: Unable to detect Security Onion version; terminating script."
 				exit 1
 			else
 				VERSION=$CURRENTVERSION
@@ -445,6 +507,11 @@ has_uppercase() {
 	echo "$string" | grep -qP '[A-Z]' \
 		&& return 0 \
 		|| return 1
+}
+
+update_elastic_agent() {
+	echo "Checking if Elastic Agent update is necessary..."
+	download_and_verify "$ELASTIC_AGENT_URL" "$ELASTIC_AGENT_MD5_URL" "$ELASTIC_AGENT_FILE" "$ELASTIC_AGENT_MD5" "$ELASTIC_AGENT_EXPANSION_DIR"
 }
 
 valid_cidr() {
@@ -503,6 +570,18 @@ valid_hostname() {
 	local hostname=$1
 
 	[[ $hostname =~ ^[a-zA-Z0-9\-]+$ ]] && [[ $hostname != 'localhost' ]] && return 0 || return 1
+}
+
+verify_ip4() {
+        local ip=$1
+        # Is this an IP or CIDR?
+        if grep -qP "^[^/]+/[^/]+$" <<< $ip; then
+                # Looks like a CIDR
+                valid_ip4_cidr_mask "$ip"
+        else
+                # We know this is not a CIDR - Is it an IP?
+                valid_ip4 "$ip"
+        fi
 }
 
 valid_ip4() {
@@ -586,6 +665,23 @@ valid_username() {
 	local user=$1
 
 	echo "$user" | grep -qP '^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$' && return 0 || return 1
+}
+
+verify_md5_checksum() {
+	data_file=$1
+	md5_file=${2:-${data_file}.md5}
+
+	if [[ ! -f "$dest_file" || ! -f "$md5_file" ]]; then
+		return 2
+	fi
+
+	SOURCEHASH=$(md5sum "$data_file" | awk '{ print $1 }')
+	HASH=$(cat "$md5_file")
+
+	if [[ "$HASH" == "$SOURCEHASH" ]]; then
+		return 0
+	fi
+	return 1
 }
 
 wait_for_web_response() {

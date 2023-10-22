@@ -1,16 +1,7 @@
-{% set CURATOROPTIONS = {} %}
-{% set ENABLED = salt['pillar.get']('curator:enabled', True) %}
-{% set TRUECLUSTER = salt['pillar.get']('elasticsearch:true_cluster', False) %}
-{% do CURATOROPTIONS.update({'manage_tcstatus': True}) %}
+{# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+   or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+   https://threatcode.net/license; you may not use this file except in compliance with the
+   Elastic License 2.0. #}
 
-# don't start the docker container if curator is disabled via pillar
-{% if not ENABLED or (TRUECLUSTER and grains.id.split('_')|last == 'searchnode') or (not TRUECLUSTER and grains.id.split('_')|last == 'manager') %}
-  {% do CURATOROPTIONS.update({'start': False}) %}
-  {% do CURATOROPTIONS.update({'status': 'absent'}) %}
-  {% if (TRUECLUSTER and grains.id.split('_')|last == 'searchnode') or (not TRUECLUSTER and grains.id.split('_')|last == 'manager') %}
-    {% do CURATOROPTIONS.update({'manage_tcstatus': False}) %}
-  {% endif %}
-{% else %}
-  {% do CURATOROPTIONS.update({'start': True}) %}
-  {% do CURATOROPTIONS.update({'status': 'running'}) %}
-{% endif %}
+{% import_yaml 'curator/defaults.yaml' as CURATORDEFAULTS %}
+{% set CURATORMERGED = salt['pillar.get']('curator', CURATORDEFAULTS.curator, merge=true) %}

@@ -2,8 +2,8 @@
 	"name": "Playbook Coverage",
 	"versions": {
 		"attack": "11",
-		"navigator": "4.6.4",
-		"layer": "4.3"
+		"navigator": "4.8.4",
+		"layer": "4.4"
 	},
 	"domain": "enterprise-attack",
 	"description": "",

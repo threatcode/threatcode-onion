@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
+
+
+. /usr/sbin/tc-common
+
+if ! [ -f /opt/tc/state/playbook_regen_plays ] || [ "$1" = "--force" ]; then
+
+    echo "Refreshing Sigma & regenerating plays... "
+
+    # Regenerate ElastAlert & update Plays
+    docker exec tc-soctopus python3 playbook_play-update.py
+
+    # Delete current Elastalert Rules
+    rm /opt/tc/rules/elastalert/playbook/*.yaml
+
+    # Regenerate Elastalert Rules
+    tc-playbook-sync
+    
+    # Create state file
+    touch /opt/tc/state/playbook_regen_plays
+else
+  printf "\nState file found, exiting...\nRerun with --force to override.\n"
+fi

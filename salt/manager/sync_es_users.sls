@@ -2,9 +2,9 @@ include:
   - elasticsearch.auth
   - kratos
 
-tc-user.lock:
+so-user.lock:
   file.missing:
-    - name: /var/tmp/tc-user.lock
+    - name: /var/tmp/so-user.lock
 
 # Must run before elasticsearch docker container is started!
 sync_es_users:
@@ -24,8 +24,9 @@ sync_es_users:
 
 # we dont want this added too early in setup, so we add the onlyif to verify 'startup_states: highstate'
 # is in the minion config. That line is added before the final highstate during setup
-sosyncusers:
+so-user_sync:
   cron.present:
     - user: root
-    - name: 'PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin /usr/sbin/tc-user sync &>> /opt/tc/log/soc/sync.log'
+    - name: 'PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin /usr/sbin/so-user sync &>> /opt/tc/log/soc/sync.log'
+    - identifier: tc-user_sync
     - onlyif: "grep 'startup_states: highstate' /etc/salt/minion"

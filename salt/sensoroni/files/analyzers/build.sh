@@ -1,7 +1,7 @@
 #!/bin/bash
 
 COMMAND=$1
-SENSORONI_CONTAINER=${SENSORONI_CONTAINER:-tc-sensoroni}
+SENSORONI_CONTAINER=${SENSORONI_CONTAINER:-so-sensoroni}
 
 function ci() {
     HOME_DIR=$(dirname "$0")

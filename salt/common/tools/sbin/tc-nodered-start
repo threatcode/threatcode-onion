@@ -1,8 +1,0 @@
-#!/bin/bash
-
-
-
-. /usr/sbin/tc-common
-
-/usr/sbin/tc-start nodered $1
-

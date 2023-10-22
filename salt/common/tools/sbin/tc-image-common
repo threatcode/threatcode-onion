@@ -1,83 +1,87 @@
 #!/bin/bash
 #
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
 
 
 # NOTE: This script depends on tc-common
-IMAGEREPO=threatcode
-STATUS_CONF='/opt/tc/conf/tc-status/tc-status.conf'
+IMAGEREPO=security-onion-solutions
+STATUS_CONF='/opt/tc/conf/so-status/so-status.conf'
 
 # shellcheck disable=SC2120
 container_list() {
   MANAGERCHECK=$1
   
   if [ -z "$MANAGERCHECK" ]; then
-    MANAGERCHECK=tc-unknown
+    MANAGERCHECK=so-unknown
     if [ -f /etc/salt/grains ]; then
       MANAGERCHECK=$(cat /etc/salt/grains | grep role | awk '{print $2}')
     fi
   fi
 
-  if [ $MANAGERCHECK == 'tc-import' ]; then
+  if [ $MANAGERCHECK == 'so-import' ]; then
     TRUSTED_CONTAINERS=(
-      "tc-acng"
-      "tc-elasticsearch"
-      "tc-filebeat"
-      "tc-idstools"
-      "tc-kibana"
-      "tc-kratos"
-      "tc-nginx"
-      "tc-pcaptools"
-      "tc-soc"
-      "tc-steno"
-      "tc-suricata"
-      "tc-zeek" 
+      "so-elasticsearch"
+      "so-idstools"
+      "so-influxdb"
+      "so-kibana"
+      "so-kratos"
+      "so-nginx"
+      "so-pcaptools"
+      "so-soc"
+      "so-steno"
+      "so-suricata"
+      "so-telegraf"
+      "so-zeek"
+      "so-elastic-agent"
+      "so-elastic-agent-builder"
+      "so-elastic-fleet-package-registry"
     )
-  elif [ $MANAGERCHECK != 'tc-helix' ]; then
+  elif [ $MANAGERCHECK != 'so-helix' ]; then
     TRUSTED_CONTAINERS=(
-      "tc-acng"
-      "tc-curator"
-      "tc-elastalert"
-      "tc-elasticsearch"
-      "tc-filebeat"
-      "tc-fleet"
-      "tc-fleet-launcher"
-      "tc-grafana"
-      "tc-idh"
-      "tc-idstools"
-      "tc-influxdb"
-      "tc-kibana"
-      "tc-kratos"
-      "tc-logstash"
-      "tc-mysql"
-      "tc-nginx"
-      "tc-pcaptools"
-      "tc-playbook"
-      "tc-redis"
-      "tc-soc"
-      "tc-soctopus"
-      "tc-steno"
-      "tc-strelka-backend"
-      "tc-strelka-filestream"
-      "tc-strelka-frontend"
-      "tc-strelka-manager"
-      "tc-suricata"
-      "tc-telegraf"
-      "tc-wazuh"
-      "tc-zeek" 
+      "so-curator"
+      "so-elastalert"
+      "so-elastic-agent"
+      "so-elastic-agent-builder"
+      "so-elastic-fleet-package-registry"
+      "so-elasticsearch"
+      "so-idh"
+      "so-idstools"
+      "so-influxdb"
+      "so-kibana"
+      "so-kratos"
+      "so-logstash"
+      "so-mysql"
+      "so-nginx"
+      "so-pcaptools"
+      "so-playbook"
+      "so-redis"
+      "so-soc"
+      "so-soctopus"
+      "so-steno"
+      "so-strelka-backend"
+      "so-strelka-filestream"
+      "so-strelka-frontend"
+      "so-strelka-manager"
+      "so-suricata"
+      "so-telegraf"
+      "so-zeek" 
     )
   else
     TRUSTED_CONTAINERS=(
-      "tc-filebeat"
-      "tc-idstools"
-      "tc-elasticsearch"
-      "tc-logstash"
-      "tc-nginx"
-      "tc-redis"
-      "tc-steno"
-      "tc-suricata"
-      "tc-soc"
-      "tc-telegraf"
-      "tc-zeek" 
+      "so-idstools"
+      "so-elasticsearch"
+      "so-logstash"
+      "so-nginx"
+      "so-redis"
+      "so-steno"
+      "so-suricata"
+      "so-soc"
+      "so-telegraf"
+      "so-zeek" 
     )
   fi
 }
@@ -124,9 +128,9 @@ update_docker_containers() {
     cat $SIGNPATH/KEYS | gpg --import - >> "$LOG_FILE" 2>&1
   fi
 
-  # If downloading for tcup, check if any optional images need to be pulled
-  if [[ $CURLTYPE == 'tcup' ]]; then
-    grep -q "tc-logscan" "$STATUS_CONF" && TRUSTED_CONTAINERS+=("tc-logscan")
+  # If downloading for soup, check if any optional images need to be pulled
+  if [[ $CURLTYPE == 'soup' ]]; then
+    grep -q "so-logscan" "$STATUS_CONF" && TRUSTED_CONTAINERS+=("so-logscan")
   fi
   
   # Download the containers from the interwebs

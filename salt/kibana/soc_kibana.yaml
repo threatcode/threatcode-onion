@@ -1,0 +1,10 @@
+kibana:
+  enabled: 
+    description: You can enable or disable Kibana.
+    helpLink: kibana.html
+  config:
+    elasticsearch:
+      requestTimeout:
+        description: The length of time before the request reaches timeout.
+        global: True
+        helpLink: kibana.html

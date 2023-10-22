@@ -1,8 +1,8 @@
-title: TC IDH - MSSQL Attempted Login
+title: SO IDH - MSSQL Attempted Login
 id: 3c36173e-9b56-4b03-b2d4-d420a9a7917f
 status: experimental
-description: Detects when the MS SQL service on a TC IDH node has had a login attempt.
-author: Threat Code Solutions
+description: Detects when the MS SQL service on a SO IDH node has had a login attempt.
+author: Security Onion Solutions
 license: MIT
 references: 
   - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration

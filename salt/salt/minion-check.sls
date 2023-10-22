@@ -12,8 +12,9 @@ state-apply-test:
        start: 0
        end: 180
 
-/usr/sbin/tc-salt-minion-check -q:
+so-salt-minion-check_cron:
   cron.present:
-    - identifier: tc-salt-minion-check
+    - name: /usr/sbin/so-salt-minion-check -q
+    - identifier: tc-salt-minion-check_cron
     - user: root
     - minute: '*/5'

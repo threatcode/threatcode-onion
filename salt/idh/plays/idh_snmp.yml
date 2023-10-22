@@ -1,8 +1,8 @@
-title: TC IDH - SNMP OID Request
+title: SO IDH - SNMP OID Request
 id: 7be20101-6701-4bfb-a0cd-dbf830e46d85
 status: experimental
-description: Detects when the SNMP service on a TC IDH node has had an OID request sent to it.
-author: Threat Code Solutions
+description: Detects when the SNMP service on a SO IDH node has had an OID request sent to it.
+author: Security Onion Solutions
 license: MIT
 references: 
   - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration

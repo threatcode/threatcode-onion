@@ -1,8 +1,8 @@
-title: TC IDH - SSH Accessed
+title: SO IDH - SSH Accessed
 id: b7a09f0a-88ca-4fe0-bc8a-92106133e231
 status: experimental
-description: Detects when the SSH service on a TC IDH node has had a new connection (logtype 4000) or login attempt (logtype 4002).
-author: Threat Code Solutions
+description: Detects when the SSH service on a SO IDH node has had a new connection (logtype 4000) or login attempt (logtype 4002).
+author: Security Onion Solutions
 license: MIT
 references: 
   - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration

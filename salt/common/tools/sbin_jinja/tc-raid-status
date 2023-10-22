@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
+
+
+. /usr/sbin/tc-common
+
+{%- if salt['grains.get']('sosmodel', '') %}
+{%- set model = salt['grains.get']('sosmodel') %}
+model={{ model }}
+# Don't need cloud images to use this
+if [[ $model =~ ^(SO2AMI01|SO2AZI01|SO2GCI01)$ ]]; then
+    exit 0
+fi
+{%- else %}
+echo "This is not an appliance"
+exit 0
+{%- endif %}
+if [[ $model =~ ^(SOS10K|SOS500|SOS1000|SOS1000F|SOS4000|SOSSN7200|SOSSNNV|SOSMN)$ ]]; then
+	is_bossraid=true
+fi
+if [[ $model =~ ^(SOSSNNV|SOSMN)$ ]]; then
+	is_swraid=true
+fi
+if [[ $model =~ ^(SOS10K|SOS500|SOS1000|SOS1000F|SOS4000|SOSSN7200)$ ]]; then
+	is_hwraid=true
+fi
+
+check_nsm_raid() {
+  PERCCLI=$(/opt/raidtools/perccli/perccli64 /c0/v0 show|grep RAID|grep Optl)
+  MEGACTL=$(/opt/raidtools/megasasctl |grep optimal)
+
+  if [[ $APPLIANCE == '1' ]]; then
+    if [[ -n $PERCCLI ]]; then
+      HWRAID=0
+    elif [[ -n $MEGACTL ]]; then
+      HWRAID=0
+    else
+      HWRAID=1
+    fi
+
+  fi
+
+}
+
+check_boss_raid() {
+  MVCLI=$(/usr/local/bin/mvcli info -o vd |grep status |grep functional)
+
+  if [[ -n $MVCLI ]]; then
+    BOSSRAID=0
+  else
+    BOSSRAID=1
+  fi
+}
+
+check_software_raid() {
+  SWRC=$(grep "_" /proc/mdstat)
+  if [[ -n $SWRC ]]; then
+      # RAID is failed in some way
+      SWRAID=1
+  else
+      SWRAID=0
+  fi
+}
+
+# Set everything to 0
+SWRAID=0
+BOSSRAID=0
+HWRAID=0
+
+if [[ $is_hwraid ]]; then
+	check_nsm_raid
+fi
+if [[ $is_bossraid ]]; then
+	check_boss_raid
+fi
+if [[ $is_swraid ]]; then
+	check_software_raid
+fi
+
+sum=$(($SWRAID + $BOSSRAID + $HWRAID))
+
+if [[ $sum == "0" ]]; then
+  RAIDSTATUS=0
+else
+  RAIDSTATUS=1
+fi
+
+echo "nsmraid=$RAIDSTATUS" > /opt/tc/log/raid/status.log

@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
+
+default_salt_dir=/opt/tc/saltstack/default
+clone_to_tmp() {
+
+  # TODO Need to add a air gap option
+  # Make a temp location for the files
+  mkdir /tmp/sogh
+  cd /tmp/sogh
+  #git clone -b dev https://github.com/ThreatCode/threatcode.git
+  git clone https://github.com/ThreatCode/threatcode.git
+  cd /tmp
+
+}
+
+copy_new_files() {
+
+  # Copy new files over to the salt dir
+  cd /tmp/sogh/threatcode
+  git checkout $BRANCH
+  VERSION=$(cat VERSION)
+  # We need to overwrite if there is a repo file
+  if [ -d /opt/tc/repo ]; then
+    tar -czf /opt/tc/repo/"$VERSION".tar.gz -C "$(pwd)/.." .
+  fi
+  rsync -a salt $default_salt_dir/
+  rsync -a pillar $default_salt_dir/
+  chown -R socore:socore $default_salt_dir/salt
+  chown -R socore:socore $default_salt_dir/pillar
+  chmod 755 $default_salt_dir/pillar/firewall/addfirewall.sh
+
+  rm -rf /tmp/sogh
+}
+
+got_root(){
+    if [ "$(id -u)" -ne 0 ]; then
+        echo "This script must be run using sudo!"
+        exit 1
+    fi
+}
+
+got_root
+if [ $# -ne 1 ] ; then
+  BRANCH=master
+else
+  BRANCH=$1
+fi
+clone_to_tmp
+copy_new_files

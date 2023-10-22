@@ -1,0 +1,170 @@
+logrotate:
+  config:
+    "/opt/tc/log/idstools/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/idstools/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/nginx/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/nginx/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/soc/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/soc/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/kratos/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/kratos/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/kibana/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/kibana/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/influxdb/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/influxdb/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/elastalert/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/elastalert/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/soctopus/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/soctopus/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/curator/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/curator/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/elasticfleet/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/elasticfleet/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/elasticfleet/*_x_ndjson":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/elasticfleet/*.ndjson
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/suricata/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/suricata/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/mysql/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/mysql/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/telegraf/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/telegraf/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/redis/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/redis/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/sensoroni/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/sensoroni/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/stenographer/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/stenographer/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/salt/so-salt-minion-check":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/salt/so-salt-minion-check
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/salt/minion":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/salt/minion
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/salt/master":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/salt/master
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/nsm/idh/*_x_log":
+      description: List of logrotate options for this file.
+      title: /nsm/idh/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/playbook/*_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/playbook/*.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/nsm/strelka/log/strelka_x_log":
+      description: List of logrotate options for this file.
+      title: /nsm/strelka/log/strelka.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"
+    "/opt/tc/log/sensor_clean_x_log":
+      description: List of logrotate options for this file.
+      title: /opt/tc/log/sensor_clean.log
+      advanced: True
+      multiline: True
+      global: True
+      forcedType: "[]string"

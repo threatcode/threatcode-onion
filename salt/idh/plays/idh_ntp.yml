@@ -1,8 +1,8 @@
-title: TC IDH - NTP Service Request
+title: SO IDH - NTP Service Request
 id: 883202b4-b974-4779-af98-8ecb0b90ba9e
 status: experimental
-description: Detects when the NTP service on a TC IDH node has had a NTP request sent to it.
-author: Threat Code Solutions
+description: Detects when the NTP service on a SO IDH node has had a NTP request sent to it.
+author: Security Onion Solutions
 license: MIT
 references: 
   - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration

@@ -1,15 +1,15 @@
-# Contributing to Threat Code
+# Contributing to Security Onion
 
 ### Questions, suggestions, and general comments
-* Threat Code uses GitHub's [Discussions](https://github.com/ThreatCode/threatcode/discussions) to provide a forum where the community and developers can interact as well as ask and answer questions.
+* Security Onion uses GitHub's [Discussions](https://github.com/ThreatCode/threatcode/discussions) to provide a forum where the community and developers can interact as well as ask and answer questions.
 
 ### Reporting a bug
 * The primary place to report unexpected behavior or possible bugs is the repo's [Discussions forum](https://github.com/ThreatCode/threatcode/discussions).
 
-*  **If you are familiar with the current version of Threat Code and are confident you've discovered a bug**, first ensure there is not already an issue present by searching the open [issues](https://github.com/ThreatCode/threatcode/issues). If there is, a thumbs up :+1: is a great way to show this bug is affecting you too.
+*  **If you are familiar with the current version of Security Onion and are confident you've discovered a bug**, first ensure there is not already an issue present by searching the open [issues](https://github.com/ThreatCode/threatcode/issues). If there is, a thumbs up :+1: is a great way to show this bug is affecting you too.
 
 * If an issue doesn't exist, [open a new one](https://github.com/ThreatCode/threatcode/issues/new), following the directions in the issue template. This means including:
-  * **System information** and how Threat Code was installed
+  * **System information** and how Security Onion was installed
   * **Log files** relevant to the bug report
   * **Reproduction steps** 
 
@@ -43,4 +43,4 @@
 
 * **Ensure all YAML (this includes Salt states and pillars) is properly formatted**. The spec for YAML v1.2 can be found [here](https://yaml.org/spec/1.2/spec.html), however there are numerous online resources with simpler descriptions of its formatting rules. 
 
-* **All code of any language should match the style of other code of that same language within the project.** Be sure that any changes you make do not break from the pre-existing style of Threat Code code.
+* **All code of any language should match the style of other code of that same language within the project.** Be sure that any changes you make do not break from the pre-existing style of Security Onion code.

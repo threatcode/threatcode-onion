@@ -1,18 +1,8 @@
-{% set ZEEKVER = salt['pillar.get']('global:mdengine', '') %}
-{% set WAZUH = salt['pillar.get']('global:wazuh', '0') %}
-{% set PLAYBOOK = salt['pillar.get']('manager:playbook', '0') %}
-{% set FREQSERVER = salt['pillar.get']('manager:freq', '0') %}
-{% set DOMAINSTATS = salt['pillar.get']('manager:domainstats', '0') %}
-{% set FLEETMANAGER = salt['pillar.get']('global:fleet_manager', False) %}
-{% set FLEETNODE = salt['pillar.get']('global:fleet_node', False) %}
-{% set ELASTALERT = salt['pillar.get']('elastalert:enabled', True) %}
-{% set ELASTICSEARCH = salt['pillar.get']('elasticsearch:enabled', True) %}
-{% set FILEBEAT = salt['pillar.get']('filebeat:enabled', True) %}
-{% set KIBANA = salt['pillar.get']('kibana:enabled', True) %}
-{% set LOGSTASH = salt['pillar.get']('logstash:enabled', True) %}
-{% set CURATOR = salt['pillar.get']('curator:enabled', True) %}
-{% set REDIS = salt['pillar.get']('redis:enabled', True) %}
-{% set STRELKA = salt['pillar.get']('strelka:enabled', '0') %}
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
+
 {% set ISAIRGAP = salt['pillar.get']('global:airgap', False) %}
 {% import_yaml 'salt/minion.defaults.yaml' as saltversion %}
 {% set saltversion = saltversion.salt.minion.version %}
@@ -23,7 +13,7 @@
 {% if grains.saltversion | string == saltversion | string %}
 
   {% set allowed_states= salt['grains.filter_by']({
-      'tc-eval': [
+      'so-eval': [
           'salt.master',
           'ca',
           'ssl',
@@ -32,9 +22,10 @@
           'nginx',
           'telegraf',
           'influxdb',
-          'grafana',
           'soc',
           'kratos',
+          'elasticfleet',
+          'elastic-fleet-package-registry',
           'firewall',
           'idstools',
           'suricata.manager',
@@ -45,10 +36,9 @@
           'schedule',
           'soctopus',
           'tcpreplay',
-          'docker_clean',
-          'learn'
+          'docker_clean'
           ],
-      'tc-heavynode': [
+      'so-heavynode': [
           'ssl',
           'nginx',
           'telegraf',
@@ -56,51 +46,20 @@
           'pcap',
           'suricata',
           'healthcheck',
+          'elasticagent',
           'schedule',
           'tcpreplay',
           'docker_clean'
           ],
-      'tc-helixsensor': [
-          'salt.master',
-          'ca',
-          'ssl',
-          'registry',
-          'telegraf',
-          'firewall',
-          'idstools',
-          'suricata.manager',
-          'zeek',
-          'redis',
-          'elasticsearch',
-          'logstash',
-          'schedule',
-          'tcpreplay',
-          'docker_clean'
-          ],
-      'tc-fleet': [
-          'ssl',
-          'nginx',
-          'telegraf',
-          'firewall',
-          'mysql',
-          'redis',
-          'fleet',
-          'fleet.install_package',
-          'filebeat',
-          'schedule',
-          'docker_clean'
-          ],
-     'tc-idh': [
+     'so-idh': [
           'ssl',
           'telegraf',
           'firewall',
-          'fleet.install_package',
-          'filebeat',
           'idh',
           'schedule',
           'docker_clean'
           ],
-      'tc-import': [
+      'so-import': [
           'salt.master',
           'ca',
           'ssl',
@@ -109,6 +68,8 @@
           'nginx',
           'soc',
           'kratos',
+          'influxdb',
+          'telegraf',
           'firewall',
           'idstools',
           'suricata.manager',
@@ -119,9 +80,10 @@
           'schedule',
           'tcpreplay',
           'docker_clean',
-          'learn'
+          'elasticfleet',
+          'elastic-fleet-package-registry'
           ],
-      'tc-manager': [
+      'so-manager': [
           'salt.master',
           'ca',
           'ssl',
@@ -130,19 +92,19 @@
           'nginx',
           'telegraf',
           'influxdb',
-          'grafana',
           'soc',
           'kratos',
+          'elasticfleet',
+          'elastic-fleet-package-registry',
           'firewall',
           'idstools',
           'suricata.manager',
           'utility',
           'schedule',
           'soctopus',
-          'docker_clean',
-          'learn'
+          'docker_clean'
           ],
-      'tc-managersearch': [
+      'so-managersearch': [
           'salt.master',
           'ca',
           'ssl',
@@ -150,9 +112,10 @@
           'nginx',
           'telegraf',
           'influxdb',
-          'grafana',
           'soc',
           'kratos',
+          'elastic-fleet-package-registry',
+          'elasticfleet',
           'firewall',
           'manager',
           'idstools',
@@ -160,10 +123,9 @@
           'utility',
           'schedule',
           'soctopus',
-          'docker_clean',
-          'learn'
+          'docker_clean'
           ],
-      'tc-node': [
+      'so-searchnode': [
           'ssl',
           'nginx',
           'telegraf',
@@ -171,7 +133,7 @@
           'schedule',
           'docker_clean'
           ],
-      'tc-standalone': [
+      'so-standalone': [
           'salt.master',
           'ca',
           'ssl',
@@ -180,9 +142,10 @@
           'nginx',
           'telegraf',
           'influxdb',
-          'grafana',
           'soc',
           'kratos',
+          'elastic-fleet-package-registry',
+          'elasticfleet',
           'firewall',
           'idstools',
           'suricata.manager',
@@ -193,10 +156,9 @@
           'schedule',
           'soctopus',
           'tcpreplay',
-          'docker_clean',
-          'learn'
+          'docker_clean'
           ],
-      'tc-sensor': [
+      'so-sensor': [
           'ssl',
           'telegraf',
           'firewall',
@@ -204,107 +166,79 @@
           'pcap',
           'suricata',
           'healthcheck',
-          'wazuh',
-          'filebeat',
           'schedule',
           'tcpreplay',
           'docker_clean'
           ],
-      'tc-receiver': [
+      'so-fleet': [
+          'ssl',
+          'telegraf',
+          'firewall',
+          'logstash',
+          'healthcheck',
+          'schedule',
+          'elasticfleet',
+          'docker_clean'
+          ],
+      'so-receiver': [
           'ssl',
           'telegraf',
           'firewall',
           'schedule',
           'docker_clean'
           ],
-      'tc-workstation': [
+      'so-desktop': [
+          'ssl',
+          'docker_clean',
+          'telegraf'
           ],
   }, grain='role') %}
 
-  {% if FILEBEAT and grains.role in ['tc-helixsensor', 'tc-eval', 'tc-manager', 'tc-standalone', 'tc-node', 'tc-managersearch', 'tc-heavynode', 'tc-import', 'tc-receiver'] %}
-    {% do allowed_states.append('filebeat') %}
-  {% endif %}
-
-  {% if ((FLEETMANAGER or FLEETNODE) or PLAYBOOK != 0) and grains.role in ['tc-eval', 'tc-manager', 'tc-managersearch', 'tc-standalone'] %}
+  {% if grains.role in ['so-eval', 'so-manager', 'so-managersearch', 'so-standalone'] %}
     {% do allowed_states.append('mysql') %}
   {% endif %}
 
-  {% if (FLEETMANAGER or FLEETNODE) and grains.role in ['tc-sensor', 'tc-eval', 'tc-manager', 'tc-standalone', 'tc-node', 'tc-managersearch', 'tc-heavynode', 'tc-receiver'] %}
-    {% do allowed_states.append('fleet.install_package') %}
-  {% endif %}
-
-  {% if (FLEETMANAGER or FLEETNODE) and grains.role in ['tc-eval', 'tc-manager', 'tc-standalone', 'tc-managersearch', 'tc-heavynode'] %}
-    {% do allowed_states.append('fleet') %}
-  {% endif %}
-
-  {% if (FLEETMANAGER or FLEETNODE) and grains.role in ['tc-eval'] %}
-    {% do allowed_states.append('redis') %}
-  {% endif %}
-
-  {%- if ZEEKVER != 'SURICATA' and grains.role in ['tc-sensor', 'tc-eval', 'tc-standalone', 'tc-heavynode'] %}
+  {%- if grains.role in ['so-sensor', 'so-eval', 'so-standalone', 'so-heavynode'] %}
     {% do allowed_states.append('zeek') %}
   {%- endif %}
 
-  {% if STRELKA and grains.role in ['tc-sensor', 'tc-eval', 'tc-standalone', 'tc-heavynode'] %}
+  {% if grains.role in ['so-sensor', 'so-eval', 'so-standalone', 'so-heavynode'] %}
     {% do allowed_states.append('strelka') %}
   {% endif %}
 
-  {% if WAZUH and grains.role in ['tc-eval', 'tc-manager', 'tc-standalone', 'tc-node', 'tc-managersearch', 'tc-heavynode', 'tc-receiver','tc-idh']%}
-    {% do allowed_states.append('wazuh') %}
-  {% endif %}
-
-  {% if ELASTICSEARCH and grains.role in ['tc-eval', 'tc-manager', 'tc-standalone', 'tc-node', 'tc-managersearch', 'tc-heavynode', 'tc-import'] %}
+  {% if grains.role in ['so-eval', 'so-manager', 'so-standalone', 'so-searchnode', 'so-managersearch', 'so-heavynode', 'so-import'] %}
     {% do allowed_states.append('elasticsearch') %}
   {% endif %}
 
-  {% if ELASTICSEARCH and grains.role in ['tc-eval', 'tc-manager', 'tc-standalone', 'tc-managersearch', 'tc-import'] %}
+  {% if grains.role in ['so-eval', 'so-manager', 'so-standalone', 'so-managersearch', 'so-import'] %}
     {% do allowed_states.append('elasticsearch.auth') %}
   {% endif %}
 
-  {% if KIBANA and grains.role in ['tc-eval', 'tc-manager', 'tc-standalone', 'tc-managersearch', 'tc-import'] %}
+  {% if grains.role in ['so-eval', 'so-manager', 'so-standalone', 'so-managersearch', 'so-import'] %}
     {% do allowed_states.append('kibana') %}
     {% do allowed_states.append('kibana.secrets') %}
   {% endif %}
 
-  {% if grains.role in ['tc-eval', 'tc-standalone', 'tc-node', 'tc-managersearch', 'tc-heavynode', 'tc-manager'] %}
+  {% if grains.role in ['so-eval', 'so-standalone', 'so-managersearch', 'so-heavynode', 'so-manager'] %}
     {% do allowed_states.append('curator') %}
   {% endif %}
 
-  {% if ELASTALERT and grains.role in ['tc-eval', 'tc-manager', 'tc-standalone', 'tc-managersearch'] %}
+  {% if grains.role in ['so-eval', 'so-manager', 'so-standalone', 'so-managersearch'] %}
     {% do allowed_states.append('elastalert') %}
   {% endif %}
 
-  {% if (PLAYBOOK !=0) and grains.role in ['tc-eval', 'tc-manager', 'tc-standalone', 'tc-managersearch'] %}
+  {% if grains.role in ['so-eval', 'so-manager', 'so-standalone', 'so-managersearch'] %}
     {% do allowed_states.append('playbook') %}
   {% endif %}
 
-  {% if (PLAYBOOK !=0) and grains.role in ['tc-eval'] %}
-    {% do allowed_states.append('redis') %}
-  {% endif %}
-
-  {% if (FREQSERVER !=0) and grains.role in ['tc-eval', 'tc-manager', 'tc-standalone', 'tc-managersearch'] %}
-    {% do allowed_states.append('freqserver') %}
-  {% endif %}
-
-  {% if (DOMAINSTATS !=0) and grains.role in ['tc-eval', 'tc-manager', 'tc-standalone', 'tc-managersearch'] %}
-    {% do allowed_states.append('domainstats') %}
-  {% endif %}
-
-  {% if LOGSTASH and grains.role in ['tc-helixsensor', 'tc-manager', 'tc-standalone', 'tc-node', 'tc-managersearch', 'tc-heavynode', 'tc-receiver'] %}
+  {% if grains.role in ['so-manager', 'so-standalone', 'so-searchnode', 'so-managersearch', 'so-heavynode', 'so-receiver'] %}
     {% do allowed_states.append('logstash') %}
   {% endif %}
 
-  {% if REDIS and grains.role in ['tc-manager', 'tc-standalone', 'tc-managersearch', 'tc-heavynode', 'tc-receiver'] %}
+  {% if grains.role in ['so-manager', 'so-standalone', 'so-managersearch', 'so-heavynode', 'so-receiver', 'so-eval'] %}
     {% do allowed_states.append('redis') %}
   {% endif %}
-
-  {% if grains.os == 'CentOS' %}
-    {% if not ISAIRGAP %}
-      {% do allowed_states.append('yum') %}
-    {% endif %}
-    {% do allowed_states.append('yum.packages') %}
-  {% endif %}
-
+  
   {# all nodes on the right salt version can run the following states #}
   {% do allowed_states.append('common') %}
   {% do allowed_states.append('patch.os.schedule') %}

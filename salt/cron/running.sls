@@ -1,7 +1,7 @@
-{% from "cron/map.jinja" import cronmap with context %}
+{% from "cron/map.jinja" import cronmap %}
 
 crond_service:
   service.running:
     - name: {{ cronmap.service }}
     - enable: True
-    - unless: pgrep tcup
+    - unless: pgrep soup

@@ -1,0 +1,7 @@
+backup:
+  locations:
+    - /opt/tc/saltstack/local
+    - /etc/pki
+    - /etc/salt
+    - /nsm/kratos
+  destination: "/nsm/backup"

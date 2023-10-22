@@ -1,8 +1,13 @@
 #!/bin/bash
 
+# Copyright Security Onion Solutions LLC and/or licensed to Security Onion Solutions LLC under one
+# or more contributor license agreements. Licensed under the Elastic License 2.0 as shown at 
+# https://threatcode.net/license; you may not use this file except in compliance with the
+# Elastic License 2.0.
 
 
-# Usage: tc-restart  filebeat | kibana | playbook 
+
+# Usage: tc-restart  kibana | playbook 
 
 . /usr/sbin/tc-common
 
@@ -19,8 +24,9 @@ if [ $# -ge 1 ]; then
 
         case $1 in
                 "steno") docker stop tc-steno && docker rm tc-steno && salt-call state.apply pcap queue=True;;
+                "elastic-fleet") docker stop tc-elastic-fleet && docker rm tc-elastic-fleet && salt-call state.apply elasticfleet queue=True;;
                 *)  docker stop tc-$1 ; docker rm tc-$1 ; salt-call state.apply $1 queue=True;;
         esac
 else
-        echo -e "\nPlease provide an argument by running like tc-restart $component, or by using the component-specific script.\nEx. tc-restart filebeat, or tc-filebeat-restart\n"
+        echo -e "\nPlease provide an argument by running like tc-restart $component, or by using the component-specific script.\nEx. tc-restart logstash, or tc-logstash-restart\n"
 fi

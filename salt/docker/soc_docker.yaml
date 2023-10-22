@@ -1,0 +1,70 @@
+docker:
+  gateway:
+    description: Gateway for the default docker interface.
+    helpLink: docker.html
+    advanced: True
+  range:
+    description: Default docker IP range for containers.
+    helpLink: docker.html
+    advanced: True
+  containers:
+    tc-dockerregistry: &dockerOptions
+      final_octet:
+        description: Last octet of the container IP address.
+        helpLink: docker.html
+        readonly: True
+        advanced: True
+        global: True
+      port_bindings:
+        description: List of port bindings for the container.
+        helpLink: docker.html
+        advanced: True
+        multiline: True
+        forcedType: "[]string"
+      custom_bind_mounts:
+        description: List of custom local volume bindings.
+        advanced: True
+        helpLink: docker.html
+        multiline: True
+        forcedType: "[]string"
+      extra_hosts:
+        description: List of additional host entries for the container.
+        advanced: True
+        helpLink: docker.html
+        multiline: True
+        forcedType: "[]string"
+      extra_env:
+        description: List of additional ENV entries for the container.
+        advanced: True
+        helpLink: docker.html
+        multiline: True
+        forcedType: "[]string"
+    tc-elastic-fleet: *dockerOptions
+    tc-elasticsearch: *dockerOptions
+    tc-idstools: *dockerOptions
+    tc-influxdb: *dockerOptions
+    tc-kibana: *dockerOptions
+    tc-kratos: *dockerOptions
+    tc-logstash: *dockerOptions
+    tc-mysql: *dockerOptions
+    tc-nginx: *dockerOptions
+    tc-playbook: *dockerOptions
+    tc-redis: *dockerOptions
+    tc-sensoroni: *dockerOptions
+    tc-soc: *dockerOptions
+    tc-soctopus: *dockerOptions
+    tc-strelka-backend: *dockerOptions
+    tc-strelka-filestream: *dockerOptions
+    tc-strelka-frontend: *dockerOptions
+    tc-strelka-manager: *dockerOptions
+    tc-strelka-gatekeeper: *dockerOptions
+    tc-strelka-coordinator: *dockerOptions
+    tc-elastalert: *dockerOptions
+    tc-curator: *dockerOptions
+    tc-elastic-fleet-package-registry: *dockerOptions
+    tc-idh: *dockerOptions
+    tc-elastic-agent: *dockerOptions
+    tc-telegraf: *dockerOptions
+    tc-steno: *dockerOptions
+    tc-suricata: *dockerOptions
+    tc-zeek: *dockerOptions

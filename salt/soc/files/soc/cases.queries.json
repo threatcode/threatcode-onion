@@ -1,7 +1,0 @@
-[
-  { "name": "Open Cases", "query": "NOT tc_case.status:closed AND NOT tc_case.category:template" },
-  { "name": "Closed Cases", "query": "tc_case.status:closed AND NOT tc_case.category:template" },
-  { "name": "My Open Cases", "query": "NOT tc_case.status:closed AND NOT tc_case.category:template AND tc_case.assigneeId:{myId}" },
-  { "name": "My Closed Cases", "query": "tc_case.status:closed AND NOT tc_case.category:template AND tc_case.assigneeId:{myId}" },  
-  { "name": "Templates", "query": "tc_case.category:template" }
-]

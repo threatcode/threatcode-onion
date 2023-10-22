@@ -1,3 +1,4 @@
+{% from 'vars/globals.map.jinja' import GLOBALS %}
 {% from 'salt/map.jinja' import UPGRADECOMMAND with context %}
 {% from 'salt/map.jinja' import SALTVERSION %}
 {% from 'salt/map.jinja' import INSTALLEDSALTVERSION %}
@@ -9,7 +10,6 @@
 
 include:
   - salt
-  - salt.helper-packages
   - systemd.reload
   - repo.client
 
@@ -33,21 +33,6 @@ install_salt_minion:
         exec 2>&- # close stderr
         nohup /bin/sh -c '{{ UPGRADECOMMAND }}' &
 
-  {# if we are the salt master #}
-  {% if grains.id.split('_')|first == grains.master %}
-remove_influxdb_continuous_query_state_file:
-  file.absent:
-    - name: /opt/tc/state/influxdb_continuous_query.py.patched
-
-remove_influxdbmod_state_file:
-  file.absent:
-    - name: /opt/tc/state/influxdbmod.py.patched
-
-remove_influxdb_retention_policy_state_file:
-  file.absent:
-    - name: /opt/tc/state/influxdb_retention_policy.py.patched
-  {% endif %}
-
 {% endif %}
 
 {% if INSTALLEDSALTVERSION|string == SALTVERSION|string %}
@@ -62,39 +47,30 @@ hold_salt_packages:
 {% endfor %}
 {% endif %}
 
-remove_info_log_level_logfile:
+remove_error_log_level_logfile:
   file.line:
     - name: /etc/salt/minion
-    - match: "log_level_logfile: info"
+    - match: "log_level_logfile: error"
     - mode: delete
 
-remove_info_log_level:
+remove_error_log_level:
   file.line:
     - name: /etc/salt/minion
-    - match: "log_level: info"
+    - match: "log_level: error"
     - mode: delete
 
 set_log_levels:
   file.append:
     - name: /etc/salt/minion
     - text:
-      - "log_level: error"
-      - "log_level_logfile: error"
+      - "log_level: info"
+      - "log_level_logfile: info"
 
-delete_pre_150_start_delay:
-  file.line:
-    - name: {{ SYSTEMD_UNIT_FILE }}
-    - match: ^ExecStartPre=*
-    - mode: delete
-    - onchanges_in:
-      - module: systemd_reload
-
-salt_minion_service_start_delay:
+salt_minion_service_unit_file:
   file.managed:
-    - name: /etc/systemd/system/salt-minion.service.d/start-delay.conf
-    - source: salt://salt/service/start-delay.conf.jinja
+    - name: {{ SYSTEMD_UNIT_FILE }}
+    - source: salt://salt/service/salt-minion.service.jinja
     - template: jinja
-    - makedirs: True
     - defaults:
         service_start_delay: {{ service_start_delay }}
     - onchanges_in:
@@ -105,8 +81,10 @@ salt_minion_service_start_delay:
 mine_functions:
   file.managed:
     - name: /etc/salt/minion.d/mine_functions.conf
-    - source: salt://salt/etc/minion.d/mine_functions.conf
+    - source: salt://salt/etc/minion.d/mine_functions.conf.jinja
     - template: jinja
+    - defaults:
+        GLOBALS: {{ GLOBALS }}
 
 # this has to be outside the if statement above since there are <requisite>_in calls to this state
 salt_minion_service:
@@ -118,11 +96,6 @@ salt_minion_service:
       - file: mine_functions
 {% if INSTALLEDSALTVERSION|string == SALTVERSION|string %}
       - file: set_log_levels
-      - file: salt_minion_service_start_delay
+      - file: salt_minion_service_unit_file
 {% endif %}
     - order: last
-
-
-patch_pkg:
-  pkg.installed:
-    - name: patch
