@@ -13,13 +13,13 @@ Columns:
     * Merged: the change has been merged to the master branch. Breaking changes affecting only rules
       skip this state.
     * Released: the change has been released officially, this means:
-        * Code or configuration of Threatcode tools was pushed as [PyPI release](https://pypi.org/project/khulnasoft/)
+        * Code or configuration of Threatcode tools was pushed as [PyPI release](https://pypi.org/project/threatcodetools/)
         * Threatcode rules were merged to master.
 * Issues: GitHub issues in the project repository for further details.
 * Commit/Branch:
     * a development branch for the states *Development* and *Implemented*.
     * a commit reference to the merge commit for states from *Merged*.
-* Release: [PyPI release](https://pypi.org/project/khulnasoft/) that implements or will implement the change.
+* Release: [PyPI release](https://pypi.org/project/threatcodetools/) that implements or will implement the change.
 * Description: contains a short description of the change.
 
 | Date       | Status   | Issues              | Commit/Branch   | Release | Description                                                                                                                                                 |
