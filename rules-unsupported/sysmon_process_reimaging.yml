@@ -9,7 +9,7 @@ description: Detects process reimaging defense evasion technique
 # and new field ImageFileName is coming from enrichment
 #             selection1: Image = ^.+\\<ImageFileName>$
 # Rule must trigger if selection1 and selection2 both occurs in timeframe of 120 sec.
-# Rule logic is currently not supported by SIGMA.
+# Rule logic is currently not supported by THREATCODE.
 # Sysmon v.10.0 or newer is required for proper detection.
 status: experimental
 author: Alexey Balandin, oscd.community
