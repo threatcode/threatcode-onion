@@ -1,0 +1,5 @@
+#!/usr/bin/env python3
+
+from threatcode.threatcode2attack import main
+
+main()
