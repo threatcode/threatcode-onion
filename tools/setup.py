@@ -13,7 +13,7 @@ with open(path.join(here, 'LONG_DESCRIPTION.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='threatcodetools',
+    name='khulnasoft',
     version='0.0.1',
     description='Tools for the Generic Signature Format for SIEM Systems',
     long_description=long_description,
